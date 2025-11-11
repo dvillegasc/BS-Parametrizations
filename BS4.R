@@ -18,64 +18,33 @@ BS4 <- function(mu.link = "log", sigma.link = "logit"){
          sigma.dr = dstats$mu.eta,
          
          # First derivatives
-         dldm = function(y, sigma, mu) {
-           
-           t <- y / mu
-           term1 <- -1 / mu
-           term2 <- (t + 3) / (2 * mu * (t + 1))
-           term3 <- -(1 / (2 * sigma^2 * mu)) * (1/t - t)
-           
-           result <- term1 + term2 + term3
+         dldm = function(y, mu, sigma) {
+           result <- (y / (sigma + mu * y)) + sigma - (mu / y)
            return(result)
          },
          
          dldd = function(y, sigma, mu) {
-           
-           t <- y / mu
-           B <- t + (1/t) - 2
-           term1 <- -1 / sigma
-           term2 <- (1 / (sigma^3)) * B
-           
-           result <- term1 + term2
+           result <- (1 / (sigma + mu * y)) + mu - (sigma * y)
            return(result)
          },
          
          # Second derivatives
          
          d2ldm2 = function(y, sigma, mu) {
-           
-           t <- y / mu
-           term1 <- -1 / mu
-           term2 <- (t + 3) / (2 * mu * (t + 1))
-           term3 <- -(1 / (2 * sigma^2 * mu)) * (1/t - t)
-           result <- term1 + term2 + term3
-           
+           result <- (y / (sigma + mu * y)) + sigma - (mu / y)
            return(-result * result)
          },
          
          d2ldd2 = function(y, sigma, mu) {
-           
-           t <- y / mu
-           B <- t + (1/t) - 2
-           term1 <- -1 / sigma
-           term2 <- (1 / (sigma^3)) * B
-           result <- term1 + term2
-           
+           result <- (1 / (sigma + mu * y)) + mu - (sigma * y)
            return(-result * result)
          },
          
          d2ldmdd = function(y, sigma, mu) {
-           t <- y / mu
            
-           term1_m <- -1 / mu
-           term2_m <- (t + 3) / (2 * mu * (t + 1))
-           term3_m <- -(1 / (2 * sigma^2 * mu)) * (1/t - t)
-           dldm <- term1_m + term2_m + term3_m
-           
-           B <- t + (1/t) - 2
-           term1_d <- -1 / sigma
-           term2_d <- (1 / (sigma^3)) * B
-           dldd <- term1_d + term2_d
+           dldm <- (y / (sigma + mu * y)) + sigma - (mu / y)
+
+           dldd <- (1 / (sigma + mu * y)) + mu - (sigma * y)
            
            d2ldmdd <- -dldm * dldd
            return(d2ldmdd)

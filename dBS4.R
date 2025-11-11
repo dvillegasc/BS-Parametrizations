@@ -3,8 +3,8 @@ dBS4 <- function(x, mu=1, sigma=0.5, log=FALSE){
   if (any(sigma <= 0))  stop(paste("sigma must be positive", "\n", ""))
   
   # Changing from BS4 to BS (original)
-  new_mu    <- (sigma/mu)
-  new_sigma <- 1 / sqrt(mu*sigma)
+  new_mu    <- (sigma/mu) #Beta
+  new_sigma <- 1 / sqrt(mu*sigma) #Alfa
   
   res <- dBS(x=x, mu=new_mu, sigma=new_sigma, log=log)
   return(res)
