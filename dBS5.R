@@ -1,37 +1,37 @@
-dBS4 <- function(x, mu=1, sigma=0.5, log=FALSE){ #mu = mu   y  sigma = lambda
+dBS5 <- function(x, mu=1, sigma=0.5, log=FALSE){ #mu = mu   y  sigma = precision
   if (any(mu <= 0)) stop(paste("mu must be positive", "\n", ""))
   if (any(sigma <= 0))  stop(paste("sigma must be positive", "\n", ""))
   
-  # Changing from BS4 to BS (original)
-  new_mu    <- (sigma/mu) #Beta
-  new_sigma <- 1 / sqrt(mu*sigma) #Alfa
+  # Changing from BS5 to BS (original)
+  new_mu    <- (sigma * mu)/(sigma + 1) #Beta
+  new_sigma <-  sqrt(2 / sigma) #Alfa
   
   res <- dBS(x=x, mu=new_mu, sigma=new_sigma, log=log)
   return(res)
 }
 
 
-pBS4 <- function(q, mu=1, sigma=0.5, lower.tail=TRUE, log.p=FALSE){
+pBS5 <- function(q, mu=1, sigma=0.5, lower.tail=TRUE, log.p=FALSE){
   if (any(mu <= 0))    stop("parameter mu has to be positive!")
   if (any(sigma <= 0))  stop(paste("sigma must be positive", "\n", ""))
   
-  # Changing from BS4 to BS (original)
-  new_mu    <- (sigma/mu)
-  new_sigma <- 1 / sqrt(mu*sigma)
+  # Changing from BS5 to BS (original)
+  new_mu    <- (sigma * mu)/(sigma + 1)
+  new_sigma <-  sqrt(2 / sigma) 
   
   cdf <- pBS(q=q, mu=new_mu, sigma=new_sigma, lower.tail=lower.tail, log.p=log.p)
   
   return(cdf)
 }
 
-qBS4 <- function(p, mu=1, sigma=0.5, lower.tail = TRUE, log.p = FALSE){
+qBS5 <- function(p, mu=1, sigma=0.5, lower.tail = TRUE, log.p = FALSE){
   if (any(mu <= 0)) stop(paste("mu must be positive", "\n", ""))
   if (any(sigma <= 0)) 
     stop(paste("sigma must be positive", "\n", ""))
   
-  # Changing from BS4 to BS (original)
-  new_mu    <- (sigma/mu)
-  new_sigma <- 1 / sqrt(mu*sigma)
+  # Changing from BS5 to BS (original)
+  new_mu    <- (sigma * mu)/(sigma + 1)
+  new_sigma <-  sqrt(2 / sigma) 
   
   if (log.p==TRUE) p <- log(p)
   if (lower.tail==FALSE) p <- 1-p
@@ -42,31 +42,30 @@ qBS4 <- function(p, mu=1, sigma=0.5, lower.tail = TRUE, log.p = FALSE){
 }
 
 
-rBS4 <- function(n, mu=1, sigma=0.5){
+rBS5 <- function(n, mu=1, sigma=0.5){
   if (any(n <= 0)) stop(paste("n must be a positive integer", "\n", ""))
   if (any(mu <= 0)) stop(paste("mu must be positive", "\n", ""))
   if (any(sigma <= 0))
     stop(paste("sigma must be positive", "\n", ""))
-      
-      # Changing from BS4 to BS (original)
-      new_mu    <- (sigma/mu)
-      new_sigma <- 1 / sqrt(mu*sigma)
-      
-      r <- rBS(n=n, mu=new_mu, sigma=new_sigma)
-      r
+  
+  # Changing from BS5 to BS (original)
+  new_mu    <- (sigma * mu)/(sigma + 1)
+  new_sigma <-  sqrt(2 / sigma) 
+  
+  r <- rBS(n=n, mu=new_mu, sigma=new_sigma)
+  r
 }
 
 
-hBS4 <- function(x, mu, sigma){
+hBS5 <- function(x, mu, sigma){
   if (any(x < 0)) 
     stop(paste("x must be positive", "\n", ""))
   if (any(mu <= 0 )) 
     stop(paste("mu must be positive", "\n", ""))
   if (any(sigma <= 0))
     stop(paste("sigma must be positive", "\n", ""))
-      
-      h <- dBS4(x, mu, sigma) / pBS4(x, mu, sigma, lower.tail=FALSE)
-      h
+  
+  h <- dBS5(x, mu, sigma) / pBS5(x, mu, sigma, lower.tail=FALSE)
+  h
 }
 
-  

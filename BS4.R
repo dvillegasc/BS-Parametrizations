@@ -1,8 +1,8 @@
-BS4 <- function(mu.link = "log", sigma.link = "logit"){
+BS4 <- function(mu.link = "log", sigma.link = "log"){
   mstats <- checklink("mu.link", "BS4", substitute(mu.link),
-                      c("inverse", "log", "identity", "own"))
+                      c("log", "inverse", "identity", "own"))
   dstats <- checklink("sigma.link", "BS4", substitute(sigma.link),
-                      c("logit", "probit", "cloglog", "cauchit", "log", "own"))
+                      c("log", "logit", "probit", "cloglog", "cauchit", "own"))
   structure(
     list(family = c("BS4", "Birnbaum-Saunders - four parameterization"),
          parameters = list(mu=TRUE, sigma=TRUE),
@@ -19,32 +19,32 @@ BS4 <- function(mu.link = "log", sigma.link = "logit"){
          
          # First derivatives
          dldm = function(y, mu, sigma) {
-           result <- (y / (sigma + mu * y)) + sigma - (mu / y)
+           result <- (y / (sigma + mu * y)) + sigma - (mu * y)
            return(result)
          },
          
          dldd = function(y, sigma, mu) {
-           result <- (1 / (sigma + mu * y)) + mu - (sigma * y)
+           result <- (1 / (sigma + mu * y)) + mu - (sigma / y)
            return(result)
          },
          
          # Second derivatives
          
          d2ldm2 = function(y, sigma, mu) {
-           result <- (y / (sigma + mu * y)) + sigma - (mu / y)
+           result <- (y / (sigma + mu * y)) + sigma - (mu * y)
            return(-result * result)
          },
          
          d2ldd2 = function(y, sigma, mu) {
-           result <- (1 / (sigma + mu * y)) + mu - (sigma * y)
+           result <- (1 / (sigma + mu * y)) + mu - (sigma / y)
            return(-result * result)
          },
          
          d2ldmdd = function(y, sigma, mu) {
            
-           dldm <- (y / (sigma + mu * y)) + sigma - (mu / y)
+           dldm <- (y / (sigma + mu * y)) + sigma - (mu * y)
 
-           dldd <- (1 / (sigma + mu * y)) + mu - (sigma * y)
+           dldd <- (1 / (sigma + mu * y)) + mu - (sigma / y)
            
            d2ldmdd <- -dldm * dldd
            return(d2ldmdd)
