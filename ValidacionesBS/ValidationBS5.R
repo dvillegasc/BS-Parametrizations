@@ -170,15 +170,8 @@ exp(coef(mod, what="sigma"))
 
 
 summary(mod)
-exp(confint(mod)) # Intervalos de confianza reales
 
-hist(y, freq = FALSE,
-     xlim = c(0, 10), ylim = c(0, 1),
-     main = "Histogram of Data-I",
-     xlab = "y", ylab = "f(y)",
-     col = "burlywood1",
-     border = "darkgoldenrod4")
-
+#------------------------ Grafica 1 ------------------------------------
 
 curve(dBS5(x, mu = 1, sigma= 2), from = 0.0000001, to = 2,
       #add= TRUE,
@@ -189,8 +182,6 @@ curve(dBS5(x, mu = 1, sigma= 2), from = 0.0000001, to = 2,
       type= "l",
       ylab = "f(x)",      
       xlab = "x")          
-
-# Curvas adicionales
 
 curve(dBS5(x, mu = 1, sigma= 5), add = TRUE, col = "gold", type= "l", lwd = 2)
 
@@ -209,6 +200,69 @@ legend("topright",
        bty="n",
        cex = 0.9,       
        legend = c("δ = 2","δ = 5", "δ = 10", "δ = 25", "δ = 50", "δ = 100"))
+  
+
+#------------------------ Grafica 2 ------------------------------------
 
 
+
+curve(dBS5(x, mu = 1, sigma= 5), from = 0.0000001, to = 4,
+      #add= TRUE,
+      ylim = c(0, 1),
+      col = "deepskyblue",       
+      lwd = 2,            
+      las = 1,
+      type= "l",
+      ylab = "f(x)",      
+      xlab = "x")          
+
+curve(dBS5(x, mu = 1.5, sigma= 5), add = TRUE, col = "gold", type= "l", lwd = 2)
+
+curve(dBS5(x, mu = 2, sigma= 5), add = TRUE, col = "red", type= "l", lwd = 2)
+
+curve(dBS5(x, mu = 2.5, sigma= 5), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
+
+curve(dBS5(x, mu = 3, sigma= 5), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
+
+curve(dBS5(x, mu = 3.5, sigma= 5), add = TRUE, col = "navy", type= "l", lwd = 2)
+
+
+legend("topright",
+       col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
+       lty = 1,
+       bty="n",
+       cex = 0.9,       
+       legend = c("μ = 1","μ = 1.5", "μ = 2", "μ = 2.5", "μ = 3", "μ = 3.5"))
+
+#-------------------------------- Grafica 3 --------------------------------
+
+varBS5 <- function(mu, sigma) {
+  numerador <- (mu^2) * (2 * sigma + 5)
+  denominador <- (sigma + 1)^2
+  return(numerador / denominador)
+}
+
+
+mu <- 2
+sigma <- seq(0, 20, length.out = 200) 
+
+var_values <- varBS5(mu = mu, sigma = sigma)
+
+
+plot(sigma, var_values, 
+     type = "l",           
+     lwd = 2,              
+     ylim = c(0, 20),      
+     xlim = c(0, 20),      
+     xlab = expression(delta),  # Símbolo griego delta
+     ylab = "Var[T]",      
+     main = "",            
+     las = 1)             
+
+
+legend(x= 8, y= 11,
+       lty = 1,
+       bty="n",
+       cex = 0.9,       
+       legend = expression(mu == 2))
 

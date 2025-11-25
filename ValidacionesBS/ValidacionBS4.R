@@ -2,28 +2,8 @@
 
 integrate(dBS4, lower=0, upper=99, mu=1.7, sigma=2.3) #1 with absolute error < 2.8e-06
 
+
 #Verificacion de las derivadas
-
-
-#dBS4 <- function(x, mu, sigma, log = FALSE) {
-  # Validaciones
-  #if (any(x <= 0)) stop("x must be positive")
-  #if (any(mu <= 0)) stop("mu (mu_A) must be positive")
-  #if (any(sigma <= 0)) stop("sigma (lambda_A) must be positive")
-  
-  #sqrt_x <- sqrt(x)
-  #term_A <- (sigma / (x * sqrt_x)) + (mu / sqrt_x)
-  #term_B <- (sigma * sqrt_x) - (mu / sqrt_x)
-  #K <- 1 / (2 * sqrt(2 * pi)) # Constante
-  
-  #if (log) {
-    #log_pdf <- log(K) + log(term_A) - 0.5 * (term_B^2)
-    #return(log_pdf)
-  #} else {
-   # pdf <- K * term_A * exp(-0.5 * (term_B^2))
-    #return(pdf)
-  #}
-#}
 
 
 #Derivadas manuales
@@ -155,18 +135,13 @@ exp(coef(mod, what="sigma"))
 
 
 summary(mod)
-exp(confint(mod)) # Intervalos de confianza reales
-    
-hist(y, freq = FALSE,
-     xlim = c(0, 3), ylim = c(0, 10),
-     main = "Histogram of Data-I",
-     xlab = "y", ylab = "f(y)",
-     col = "burlywood1",
-     border = "darkgoldenrod4")
+
+
+#-------------------------------- Grafica 1 --------------------------------
+
     
     
-curve(dBS4(x, mu = 4.5, sigma= 5), from = 0.0000001, to = 10,
-      add= TRUE,
+curve(dBS4(x, mu = 1.5, sigma= 5), from = 0.0000001, to = 10,
       ylim = c(0, 1.7),
       col = "navy",       
       lwd = 2,            
@@ -175,7 +150,6 @@ curve(dBS4(x, mu = 4.5, sigma= 5), from = 0.0000001, to = 10,
       ylab = "f(x)",      
       xlab = "x")          
     
-# Curvas adicionales
 curve(dBS4(x, mu = 2, sigma= 5), add = TRUE, col = "deepskyblue", type= "l", lwd = 2)
     
 curve(dBS4(x, mu = 3, sigma= 5), add = TRUE, col = "gold", type= "l", lwd = 2)
@@ -195,5 +169,69 @@ legend("topright",
        legend = c("μA = 1.5","μA = 2", "μA = 3", "μA = 3.5", "μA = 4", "μA = 4.5"))
     
     
-    
+#------------------------ Grafica 2 ------------------------------------
+
+
+
+curve(dBS4(x, mu = 5, sigma= 0.4), from = 0.0000001, to = 1,
+      #add= TRUE,
+      ylim = c(0, 9),
+      col = "deepskyblue",       
+      lwd = 2,            
+      las = 1,
+      type= "l",
+      ylab = "f(x)",      
+      xlab = "x")          
+
+curve(dBS4(x, mu = 5, sigma= 0.5), add = TRUE, col = "gold", type= "l", lwd = 2)
+
+curve(dBS4(x, mu = 5, sigma= 1), add = TRUE, col = "red", type= "l", lwd = 2)
+
+curve(dBS4(x, mu = 5, sigma= 1.5), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
+
+curve(dBS4(x, mu = 5, sigma= 2), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
+
+curve(dBS4(x, mu = 5, sigma= 3), add = TRUE, col = "navy", type= "l", lwd = 2)
+
+
+legend("topright",
+       col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
+       lty = 1,
+       bty="n",
+       cex = 0.9,       
+       legend = c("λ = 0.4", "λ = 0.5","λ = 1", "λ = 1.5", "λ = 2.5", "λ = 3"))
+
+#-------------------------------- Grafica 3 --------------------------------
+
+varBS4 <- function(mu, sigma) {
+  numerador <- ((sigma*mu) + 5/4)
+  denominador <- mu^4
+  return(numerador / denominador)
+}
+
+
+sigma <- 2
+mu <- seq(1, 4, length.out = 200) 
+
+var_values <- varBS4(mu = mu, sigma = sigma)
+
+
+plot(mu, var_values, 
+     type = "l",           
+     lwd = 2,              
+     ylim = c(0, 3.5),      
+     xlim = c(1, 4),      
+     xlab = expression(mu[A]),  # Símbolo griego delta
+     ylab = "Var[T]",      
+     main = "",            
+     las = 1)             
+
+
+legend(x= 2.2, y= 1.7,
+       lty = 1,
+       bty="n",
+       cex = 0.9,       
+       legend = expression(lambda[A] == 2))
+
+
     

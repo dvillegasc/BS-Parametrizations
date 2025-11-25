@@ -2,7 +2,7 @@ BS5 <- function(mu.link = "log", sigma.link = "log"){
   mstats <- checklink("mu.link", "BS5", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))
   dstats <- checklink("sigma.link", "BS5", substitute(sigma.link),
-                      c("log", "logit", "probit", "cloglog", "cauchit", "own"))
+                      c("log", "logit", "probit", "own"))
   structure(
     list(family = c("BS5", "Birnbaum-Saunders - four parameterization"),
          parameters = list(mu=TRUE, sigma=TRUE),
