@@ -1,6 +1,6 @@
-#Verificacion de la dBS5
+#Verificacion de la dBS7
 
-integrate(dBS5, lower=0, upper=99, mu=1.7, sigma=2.3) #1 with absolute error < 5.4e-05
+integrate(dBS7, lower=0, upper=99, mu=1.7, sigma=2.3) #1 with absolute error < 0.00011
 
 #Verificacion de las derivadas
 
@@ -10,10 +10,14 @@ integrate(dBS5, lower=0, upper=99, mu=1.7, sigma=2.3) #1 with absolute error < 5
 library(gamlss)
 
 
-dldm_manual <- function(y, mu, sigma) {
-  a0 <- sqrt(2 / sigma)
-  b0 <- (sigma * mu) / (sigma + 1)
-  db_dm <- b0 / mu
+#Derivadas manuales
+
+library(gamlss)
+
+dldm_manual = function(y, mu, sigma) {
+  a0 <- sigma
+  b0 <- (2 * sqrt(mu)) / (sigma * sqrt(4 + 5 * sigma^2))
+  db_dm <- b0 / (2 * mu)
   
   term1 <- (1 / (y + b0)) * db_dm
   term2 <- -1 / (2 * b0) * db_dm
@@ -23,12 +27,11 @@ dldm_manual <- function(y, mu, sigma) {
   return(result)
 }
 
-dldd_manual <- function(y, mu, sigma) { 
-  a0 <- sqrt(2 / sigma)
-  b0 <- (sigma * mu) / (sigma + 1)
-  
-  da_ds <- -a0 / (2 * sigma)
-  db_ds <- mu / ((sigma + 1)^2)
+dldd_manual = function(y, mu, sigma) { 
+  a0 <- sigma
+  b0 <- (2 * sqrt(mu)) / (sigma * sqrt(4 + 5 * sigma^2))
+  da_ds <- 1
+  db_ds <- -b0 * ((4 + 10 * sigma^2) / (sigma * (4 + 5 * sigma^2)))
   
   term1 <- (-1 / a0) * da_ds
   term2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
@@ -41,12 +44,12 @@ dldd_manual <- function(y, mu, sigma) {
 }
 
 
-# --- Second derivates ---
+# Second derivates
 
 d2ldm2_manual <- function(y, mu, sigma) {
-  a0 <- sqrt(2 / sigma)
-  b0 <- (sigma * mu) / (sigma + 1)
-  db_dm <- b0 / mu
+  a0 <- sigma
+  b0 <- (2 * sqrt(mu)) / (sigma * sqrt(4 + 5 * sigma^2))
+  db_dm <- b0 / (2 * mu)
   
   term1 <- (1 / (y + b0)) * db_dm
   term2 <- -1 / (2 * b0) * db_dm
@@ -57,12 +60,12 @@ d2ldm2_manual <- function(y, mu, sigma) {
   return(-dldm * dldm) 
 }
 
-d2ldd2_manual <- function(y, mu, sigma) {
-  a0 <- sqrt(2 / sigma)
-  b0 <- (sigma * mu) / (sigma + 1)
+d2ldd2_manual = function(y, mu, sigma) {
+  a0 <- sigma
+  b0 <- (2 * sqrt(mu)) / (sigma * sqrt(4 + 5 * sigma^2))
   
-  da_ds <- -a0 / (2 * sigma)
-  db_ds <- mu / ((sigma + 1)^2)
+  da_ds <- 1
+  db_ds <- -b0 * ((4 + 10 * sigma^2) / (sigma * (4 + 5 * sigma^2)))
   
   term1 <- (-1 / a0) * da_ds
   term2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
@@ -75,21 +78,21 @@ d2ldd2_manual <- function(y, mu, sigma) {
   return(-dldd * dldd)
 }
 
-d2ldmdd_manual <- function(y, mu, sigma) {
-  a0 <- sqrt(2 / sigma)
-  b0 <- (sigma * mu) / (sigma + 1)
+d2ldmdd_manual = function(y, mu, sigma) {
+  a0 <- sigma
+  b0 <- (2 * sqrt(mu)) / (sigma * sqrt(4 + 5 * sigma^2))
   
-  db_dm <- b0 / mu
-  da_ds <- -a0 / (2 * sigma)
-  db_ds <- mu / ((sigma + 1)^2)
+  db_dm <- b0 / (2 * mu)
+  da_ds <- 1
+  db_ds <- -b0 * ((4 + 10 * sigma^2) / (sigma * (4 + 5 * sigma^2)))
   
-  # dldm
+  # dldm 
   m1 <- (1 / (y + b0)) * db_dm
   m2 <- -1 / (2 * b0) * db_dm
   m3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
   dldm <- m1 + m2 + m3
   
-  # dldd
+  # dldd 
   d1 <- (-1 / a0) * da_ds
   d2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
   d3 <- (1 / (y + b0)) * db_ds
@@ -100,12 +103,13 @@ d2ldmdd_manual <- function(y, mu, sigma) {
   return(-dldm * dldd)
 }
 
+
 #Derivadas computacionales
 
 dldm_compu <- function(y, mu, sigma) {
   
   dm <- gamlss::numeric.deriv(
-    expr = dBS5(y, mu, sigma, log = TRUE), 
+    expr = dBS7(y, mu, sigma, log = TRUE), 
     theta = "mu",                           
     delta = 1e-04)
   
@@ -118,7 +122,7 @@ dldm_compu <- function(y, mu, sigma) {
 dldd_compu <- function(y, mu, sigma) {
   
   ds <- gamlss::numeric.deriv(
-    expr = dBS5(y, mu, sigma, log = TRUE), 
+    expr = dBS7(y, mu, sigma, log = TRUE), 
     theta = "sigma",                        
     delta = 1e-04)
   
@@ -130,7 +134,7 @@ dldd_compu <- function(y, mu, sigma) {
 d2ldm2_compu <- function(y, mu, sigma) {
   
   dm <- gamlss::numeric.deriv(
-    expr = dBS5(y, mu, sigma, log = TRUE), 
+    expr = dBS7(y, mu, sigma, log = TRUE), 
     theta = "mu",
     deltha= 1e-04)
   
@@ -142,7 +146,7 @@ d2ldm2_compu <- function(y, mu, sigma) {
 d2ldd2_compu <- function(y, mu, sigma) {
   
   ds <- gamlss::numeric.deriv(
-    expr = dBS5(y, mu, sigma, log = TRUE), 
+    expr = dBS7(y, mu, sigma, log = TRUE), 
     theta = "sigma")
   
   d2ldd2 <- as.vector(attr(ds, "hessian"))[1, 1]
@@ -184,10 +188,10 @@ n <- 1000
 true_mu <- 1
 true_si <- 5
 
-y <- rBS5(n=n, mu=true_mu, sigma=true_si)
+y <- rBS7(n=n, mu=true_mu, sigma=true_si)
 
 library(gamlss)
-mod <- gamlss(y ~ 1, family=BS5,
+mod <- gamlss(y ~ 1, family=BS7,
               n.cyc = 100)
 
 exp(coef(mod, what="mu"))
@@ -198,96 +202,64 @@ summary(mod)
 
 #------------------------ Grafica 1 ------------------------------------
 
-curve(dBS5(x, mu = 1, sigma= 2), from = 0.0000001, to = 2,
+curve(dBS7(x, mu = 10, sigma= 0.1), from = 0.0000001, to = 40,
       #add= TRUE,
-      ylim = c(0, 3),
-      col = "deepskyblue",       
-      lwd = 2,            
+      ylim = c(0, 0.35),
+      col = "deepskyblue",        
+      lwd = 2,              
       las = 1,
       type= "l",
       ylab = "f(x)",      
       xlab = "x")          
 
-curve(dBS5(x, mu = 1, sigma= 5), add = TRUE, col = "gold", type= "l", lwd = 2)
+curve(dBS7(x, mu = 10, sigma= 0.2), add = TRUE, col = "gold", type= "l", lwd = 2)
 
-curve(dBS5(x, mu = 1, sigma= 10), add = TRUE, col = "red", type= "l", lwd = 2)
+curve(dBS7(x, mu = 10, sigma= 0.4), add = TRUE, col = "red", type= "l", lwd = 2)
 
-curve(dBS5(x, mu = 1, sigma= 25), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
+curve(dBS7(x, mu = 10, sigma= 0.5), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
 
-curve(dBS5(x, mu = 1, sigma= 50), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
+curve(dBS7(x, mu = 10, sigma= 0.75), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
 
-curve(dBS5(x, mu = 1, sigma= 100), add = TRUE, col = "navy", type= "l", lwd = 2)
+curve(dBS7(x, mu = 10, sigma= 1), add = TRUE, col = "navy", type= "l", lwd = 2)
 
 
 legend("topright",
        col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
        lty = 1,
        bty="n",
-       cex = 0.9,       
-       legend = c("δ = 2","δ = 5", "δ = 10", "δ = 25", "δ = 50", "δ = 100"))
-  
+       cex = 0.9,        
+       legend = c("α = 0.1","α = 0.2", "α = 0.4", "α = 0.5", "α = 0.75", "α = 1"))
+
 
 #------------------------ Grafica 2 ------------------------------------
 
 
 
-curve(dBS5(x, mu = 1, sigma= 5), from = 0.0000001, to = 4,
+curve(dBS7(x, mu = 0.1, sigma = 0.1), from = 0.0000001, to = 5,
       #add= TRUE,
-      ylim = c(0, 1),
-      col = "deepskyblue",       
-      lwd = 2,            
+      ylim = c(0, 1.6),
+      col = "deepskyblue",        
+      lwd = 2,              
       las = 1,
       type= "l",
       ylab = "f(x)",      
       xlab = "x")          
 
-curve(dBS5(x, mu = 1.5, sigma= 5), add = TRUE, col = "gold", type= "l", lwd = 2)
+curve(dBS7(x, mu = 0.2, sigma = 0.1), add = TRUE, col = "gold", type= "l", lwd = 2)
 
-curve(dBS5(x, mu = 2, sigma= 5), add = TRUE, col = "red", type= "l", lwd = 2)
+curve(dBS7(x, mu = 0.5, sigma = 0.1), add = TRUE, col = "red", type= "l", lwd = 2)
 
-curve(dBS5(x, mu = 2.5, sigma= 5), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
+curve(dBS7(x, mu = 0.75, sigma = 0.1), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
 
-curve(dBS5(x, mu = 3, sigma= 5), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
+curve(dBS7(x, mu = 1, sigma = 0.1), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
 
-curve(dBS5(x, mu = 3.5, sigma= 5), add = TRUE, col = "navy", type= "l", lwd = 2)
+curve(dBS7(x, mu = 1.5, sigma = 0.1), add = TRUE, col = "navy", type= "l", lwd = 2)
 
 
 legend("topright",
        col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
        lty = 1,
        bty="n",
-       cex = 0.9,       
-       legend = c("μ = 1","μ = 1.5", "μ = 2", "μ = 2.5", "μ = 3", "μ = 3.5"))
-
-#-------------------------------- Grafica 3 --------------------------------
-
-varBS5 <- function(mu, sigma) {
-  numerador <- (mu^2) * (2 * sigma + 5)
-  denominador <- (sigma + 1)^2
-  return(numerador / denominador)
-}
-
-
-mu <- 2
-sigma <- seq(0, 20, length.out = 20) 
-
-var_values <- varBS5(mu = mu, sigma = sigma)
-
-
-plot(sigma, var_values, 
-     type = "l",           
-     lwd = 2,              
-     ylim = c(0, 20),      
-     xlim = c(0, 20),      
-     xlab = expression(delta),  # Símbolo griego delta
-     ylab = "Var[T]",      
-     main = "",            
-     las = 1)             
-
-
-legend(x= 8, y= 11,
-       lty = 1,
-       bty="n",
-       cex = 0.9,       
-       legend = expression(mu == 2))
+       cex = 0.9,        
+       legend = c("μ = 0.1", "μ = 1","μ = 1.5", "μ = 2", "μ = 2.5", "μ = 3"))
 

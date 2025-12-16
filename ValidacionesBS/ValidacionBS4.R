@@ -22,7 +22,7 @@ dldd_manual <- function(y, sigma, mu) {
 }
 
 
-# --- Second derivates ---
+# Second derivates
 
 d2ldm2_manual <- function(y, sigma, mu) {
   deriv1 <- dldm_manual(y, mu, sigma)
@@ -211,7 +211,7 @@ varBS4 <- function(mu, sigma) {
 
 
 sigma <- 2
-mu <- seq(1, 4, length.out = 200) 
+mu <- seq(1, 4, length.out = 5) 
 
 var_values <- varBS4(mu = mu, sigma = sigma)
 

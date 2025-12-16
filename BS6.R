@@ -19,26 +19,29 @@ BS6 <- function(mu.link = "log", sigma.link = "log"){
          
          # First derivatives
          dldm = function(y, mu, sigma) {
-           b <- (2 * mu) / (2 + sigma^2)
+           a0 <- sigma
+           b0 <- (2 * mu) / (2 + sigma^2)
            db_dm <- 2 / (2 + sigma^2)
            
-           term1 <- (1 / (y + b)) * db_dm
-           term2 <- -1 / (2 * mu)
-           term3 <- (1 / (2 * sigma^2)) * ((y / b^2) - (1 / y)) * db_dm
+           term1 <- (1 / (y + b0)) * db_dm
+           term2 <- -1 / (2 * b0) * db_dm
+           term3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
            
            result <- term1 + term2 + term3
            return(result)
          },
          
          dldd = function(y, mu, sigma) { 
-           b <- (2 * mu) / (2 + sigma^2)
+           a0 <- sigma
+           b0 <- (2 * mu) / (2 + sigma^2)
+           da_ds <- 1
            db_ds <- -(4 * mu * sigma) / ((2 + sigma^2)^2)
-           
-           term1 <- -1 / sigma
-           term2 <- (1 / sigma^3) * ((y / b) + (b / y) - 2)
-           term3 <- (1 / (y + b)) * db_ds
-           term4 <- (-1 / (2 * b)) * db_ds
-           term5 <- (1 / (2 * sigma^2)) * ((y / b^2) - (1 / y)) * db_ds
+
+           term1 <- (-1 / a0) * da_ds
+           term2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
+           term3 <- (1 / (y + b0)) * db_ds
+           term4 <- (-1 / (2 * b0)) * db_ds
+           term5 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_ds
            
            result <- term1 + term2 + term3 + term4 + term5
            return(result)
@@ -47,51 +50,55 @@ BS6 <- function(mu.link = "log", sigma.link = "log"){
          # Second derivatives
          
          d2ldm2 = function(y, mu, sigma) {
-           b <- (2 * mu) / (2 + sigma^2)
+           a0 <- sigma
+           b0 <- (2 * mu) / (2 + sigma^2)
            db_dm <- 2 / (2 + sigma^2)
            
-           term1 <- (1 / (y + b)) * db_dm
-           term2 <- -1 / (2 * mu)
-           term3 <- (1 / (2 * sigma^2)) * ((y / b^2) - (1 / y)) * db_dm
+           term1 <- (1 / (y + b0)) * db_dm
+           term2 <- -1 / (2 * b0) * db_dm
+           term3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
            
            dldm <- term1 + term2 + term3
-           
            return(-dldm * dldm) 
          },
          
          d2ldd2 = function(y, mu, sigma) {
-           b <- (2 * mu) / (2 + sigma^2)
+           a0 <- sigma
+           b0 <- (2 * mu) / (2 + sigma^2)
+           
+           da_ds <- 1
            db_ds <- -(4 * mu * sigma) / ((2 + sigma^2)^2)
            
-           term1 <- -1 / sigma
-           term2 <- (1 / sigma^3) * ((y / b) + (b / y) - 2)
-           term3 <- (1 / (y + b)) * db_ds
-           term4 <- (-1 / (2 * b)) * db_ds
-           term5 <- (1 / (2 * sigma^2)) * ((y / b^2) - (1 / y)) * db_ds
+           term1 <- (-1 / a0) * da_ds
+           term2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
+           term3 <- (1 / (y + b0)) * db_ds
+           term4 <- (-1 / (2 * b0)) * db_ds
+           term5 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_ds
            
            dldd <- term1 + term2 + term3 + term4 + term5
-           
            return(-dldd * dldd)
          },
          
          d2ldmdd = function(y, mu, sigma) {
-           # Auxiliares
-           b <- (2 * mu) / (2 + sigma^2)
+           a0 <- sigma
+           b0 <- (2 * mu) / (2 + sigma^2)
+           
            db_dm <- 2 / (2 + sigma^2)
+           da_ds <- 1
            db_ds <- -(4 * mu * sigma) / ((2 + sigma^2)^2)
            
            # dldm
-           m1 <- (1 / (y + b)) * db_dm
-           m2 <- -1 / (2 * mu)
-           m3 <- (1 / (2 * sigma^2)) * ((y / b^2) - (1 / y)) * db_dm
+           m1 <- (1 / (y + b0)) * db_dm
+           m2 <- -1 / (2 * b0) * db_dm
+           m3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
            dldm <- m1 + m2 + m3
            
            # dldd
-           d1 <- -1 / sigma
-           d2 <- (1 / sigma^3) * ((y / b) + (b / y) - 2)
-           d3 <- (1 / (y + b)) * db_ds
-           d4 <- (-1 / (2 * b)) * db_ds
-           d5 <- (1 / (2 * sigma^2)) * ((y / b^2) - (1 / y)) * db_ds
+           d1 <- (-1 / a0) * da_ds
+           d2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
+           d3 <- (1 / (y + b0)) * db_ds
+           d4 <- (-1 / (2 * b0)) * db_ds
+           d5 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_ds
            dldd <- d1 + d2 + d3 + d4 + d5
            
            return(-dldm * dldd)

@@ -1,10 +1,10 @@
-BS5 <- function(mu.link = "log", sigma.link = "log"){
-  mstats <- checklink("mu.link", "BS5", substitute(mu.link),
+BS8 <- function(mu.link = "log", sigma.link = "log"){
+  mstats <- checklink("mu.link", "dBS8", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))
-  dstats <- checklink("sigma.link", "BS5", substitute(sigma.link),
+  dstats <- checklink("sigma.link", "dBS8", substitute(sigma.link),
                       c("log", "logit", "probit", "own"))
   structure(
-    list(family = c("BS5", "Birnbaum-Saunders - four parameterization"),
+    list(family = c("dBS8", "Birnbaum-Saunders - five parameterization"),
          parameters = list(mu=TRUE, sigma=TRUE),
          nopar = 2,
          type = "Continuous",
@@ -19,9 +19,9 @@ BS5 <- function(mu.link = "log", sigma.link = "log"){
          
          # First derivatives
          dldm = function(y, mu, sigma) {
-           a0 <- sqrt(2 / sigma)
-           b0 <- (sigma * mu) / (sigma + 1)
-           db_dm <- b0 / mu
+           a0 <- (2 * sqrt(sigma - 1)) / sqrt(5)
+           b0 <- sqrt(5 * mu) / (2 * sqrt(sigma * (sigma - 1)))
+           db_dm <- b0 / (2 * mu)
            
            term1 <- (1 / (y + b0)) * db_dm
            term2 <- -1 / (2 * b0) * db_dm
@@ -32,10 +32,11 @@ BS5 <- function(mu.link = "log", sigma.link = "log"){
          },
          
          dldd = function(y, mu, sigma) { 
-           a0 <- sqrt(2 / sigma)
-           b0 <- (sigma * mu) / (sigma + 1)
-           da_ds <- -a0 / (2 * sigma)
-           db_ds <- mu / ((sigma + 1)^2)
+           a0 <- (2 * sqrt(sigma - 1)) / sqrt(5)
+           b0 <- sqrt(5 * mu) / (2 * sqrt(sigma * (sigma - 1)))
+           
+           da_ds <- 1 / sqrt(5 * (sigma - 1))
+           db_ds <- -b0 * (2 * sigma - 1) / (2 * sigma * (sigma - 1))
            
            term1 <- (-1 / a0) * da_ds
            term2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
@@ -47,26 +48,28 @@ BS5 <- function(mu.link = "log", sigma.link = "log"){
            return(result)
          },
          
-         # Second derivatives 
+         # Second derivatives
+         
          d2ldm2 = function(y, mu, sigma) {
-           a0 <- sqrt(2 / sigma)
-           b0 <- (sigma * mu) / (sigma + 1)
-           db_dm <- b0 / mu
+           a0 <- (2 * sqrt(sigma - 1)) / sqrt(5)
+           b0 <- sqrt(5 * mu) / (2 * sqrt(sigma * (sigma - 1)))
+           db_dm <- b0 / (2 * mu)
            
            term1 <- (1 / (y + b0)) * db_dm
            term2 <- -1 / (2 * b0) * db_dm
            term3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
            
            dldm <- term1 + term2 + term3
+           
            return(-dldm * dldm) 
          },
          
          d2ldd2 = function(y, mu, sigma) {
-           a0 <- sqrt(2 / sigma)
-           b0 <- (sigma * mu) / (sigma + 1)
+           a0 <- (2 * sqrt(sigma - 1)) / sqrt(5)
+           b0 <- sqrt(5 * mu) / (2 * sqrt(sigma * (sigma - 1)))
            
-           da_ds <- -a0 / (2 * sigma)
-           db_ds <- mu / ((sigma + 1)^2)
+           da_ds <- 1 / sqrt(5 * (sigma - 1))
+           db_ds <- -b0 * (2 * sigma - 1) / (2 * sigma * (sigma - 1))
            
            term1 <- (-1 / a0) * da_ds
            term2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
@@ -75,16 +78,17 @@ BS5 <- function(mu.link = "log", sigma.link = "log"){
            term5 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_ds
            
            dldd <- term1 + term2 + term3 + term4 + term5
+           
            return(-dldd * dldd)
          },
          
          d2ldmdd = function(y, mu, sigma) {
-           a0 <- sqrt(2 / sigma)
-           b0 <- (sigma * mu) / (sigma + 1)
+           a0 <- (2 * sqrt(sigma - 1)) / sqrt(5)
+           b0 <- sqrt(5 * mu) / (2 * sqrt(sigma * (sigma - 1)))
            
-           db_dm <- b0 / mu
-           da_ds <- -a0 / (2 * sigma)
-           db_ds <- mu / ((sigma + 1)^2)
+           db_dm <- b0 / (2 * mu)
+           da_ds <- 1 / sqrt(5 * (sigma - 1))
+           db_ds <- -b0 * (2 * sigma - 1) / (2 * sigma * (sigma - 1))
            
            # dldm
            m1 <- (1 / (y + b0)) * db_dm
@@ -104,14 +108,14 @@ BS5 <- function(mu.link = "log", sigma.link = "log"){
          },
          
          
-         G.dev.incr = function(y,mu,sigma,...) -2*dBS5(y,mu,sigma,log=TRUE),
-         rqres = expression(rqres(pfun="pBS5", type="Continuous",y=y,mu=mu,sigma=sigma)),
+         G.dev.incr = function(y,mu,sigma,...) -2*dBS8(y,mu,sigma,log=TRUE),
+         rqres = expression(rqres(pfun="pBS8", type="Continuous",y=y,mu=mu,sigma=sigma)),
          
          mu.initial    = expression({mu    <- rep(mean(y), length(y))}),
-         sigma.initial = expression({sigma <- rep(0.5, length(y)) }),
+         sigma.initial = expression({sigma <- rep(2, length(y)) }),
          
          mu.valid = function(mu) all(mu > 0) ,
-         sigma.valid = function(sigma) all(sigma > 0),
+         sigma.valid = function(sigma) all(sigma > 1),
          y.valid = function(y) all(y > 0)
     ),
     class = c("gamlss.family","family"))
