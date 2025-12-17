@@ -44,66 +44,6 @@ dldd_manual = function(y, mu, sigma) {
 }
 
 
-# Second derivates
-
-d2ldm2_manual <- function(y, mu, sigma) {
-  a0 <- sigma
-  b0 <- (2 * sqrt(mu)) / (sigma * sqrt(4 + 5 * sigma^2))
-  db_dm <- b0 / (2 * mu)
-  
-  term1 <- (1 / (y + b0)) * db_dm
-  term2 <- -1 / (2 * b0) * db_dm
-  term3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
-  
-  dldm <- term1 + term2 + term3
-  
-  return(-dldm * dldm) 
-}
-
-d2ldd2_manual = function(y, mu, sigma) {
-  a0 <- sigma
-  b0 <- (2 * sqrt(mu)) / (sigma * sqrt(4 + 5 * sigma^2))
-  
-  da_ds <- 1
-  db_ds <- -b0 * ((4 + 10 * sigma^2) / (sigma * (4 + 5 * sigma^2)))
-  
-  term1 <- (-1 / a0) * da_ds
-  term2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
-  term3 <- (1 / (y + b0)) * db_ds
-  term4 <- (-1 / (2 * b0)) * db_ds
-  term5 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_ds
-  
-  dldd <- term1 + term2 + term3 + term4 + term5
-  
-  return(-dldd * dldd)
-}
-
-d2ldmdd_manual = function(y, mu, sigma) {
-  a0 <- sigma
-  b0 <- (2 * sqrt(mu)) / (sigma * sqrt(4 + 5 * sigma^2))
-  
-  db_dm <- b0 / (2 * mu)
-  da_ds <- 1
-  db_ds <- -b0 * ((4 + 10 * sigma^2) / (sigma * (4 + 5 * sigma^2)))
-  
-  # dldm 
-  m1 <- (1 / (y + b0)) * db_dm
-  m2 <- -1 / (2 * b0) * db_dm
-  m3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
-  dldm <- m1 + m2 + m3
-  
-  # dldd 
-  d1 <- (-1 / a0) * da_ds
-  d2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
-  d3 <- (1 / (y + b0)) * db_ds
-  d4 <- (-1 / (2 * b0)) * db_ds
-  d5 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_ds
-  dldd <- d1 + d2 + d3 + d4 + d5
-  
-  return(-dldm * dldd)
-}
-
-
 #Derivadas computacionales
 
 dldm_compu <- function(y, mu, sigma) {
@@ -129,32 +69,6 @@ dldd_compu <- function(y, mu, sigma) {
   dldd <- as.vector(attr(ds, "gradient"))
   return(dldd)
 }
-
-#Segundas derivadas compu
-d2ldm2_compu <- function(y, mu, sigma) {
-  
-  dm <- gamlss::numeric.deriv(
-    expr = dBS7(y, mu, sigma, log = TRUE), 
-    theta = "mu",
-    deltha= 1e-04)
-  
-  d2ldm2 <- as.vector(attr(dm, "hessian"))[1, 1]
-  return(d2ldm2)
-}
-
-
-d2ldd2_compu <- function(y, mu, sigma) {
-  
-  ds <- gamlss::numeric.deriv(
-    expr = dBS7(y, mu, sigma, log = TRUE), 
-    theta = "sigma")
-  
-  d2ldd2 <- as.vector(attr(ds, "hessian"))[1, 1]
-  return(d2ldd2)
-}
-
-
-
 
 
 # PRUEBA
@@ -229,7 +143,7 @@ legend("topright",
 
 #------------------------ Grafica 2 ------------------------
 
-curve(dBS7(x, mu = 0.1, sigma = 0.1), from = 0.0000001, to = 5,
+curve(dBS7(x, mu = 0.1, sigma = 0.1), from = 0.0000001, to = 5, #No funciona
       ylim = c(0, 2),
       col = "black",        
       lwd = 2,              
