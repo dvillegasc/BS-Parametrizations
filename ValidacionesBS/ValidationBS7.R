@@ -1,13 +1,8 @@
 #Verificacion de la dBS7
 
-integrate(dBS7, lower=0, upper=99, mu=1.7, sigma=2.3) #1 with absolute error < 0.00011
+integrate(dBS7, lower=0, upper=99, mu=1.7, sigma=2.3)
 
 #Verificacion de las derivadas
-
-
-#Derivadas manuales
-
-library(gamlss)
 
 
 #Derivadas manuales
@@ -143,7 +138,7 @@ legend("topright",
 
 #------------------------ Grafica 2 ------------------------
 
-curve(dBS7(x, mu = 0.1, sigma = 0.1), from = 0.0000001, to = 5, #No funciona
+curve(dBS7(x, mu = 0.1, sigma = 0.5), from = 0.0000001, to = 5, #El paper se equivoco, la grafica funciona con sigma 0.5 en lugar de 0.1
       ylim = c(0, 2),
       col = "black",        
       lwd = 2,              
@@ -153,11 +148,11 @@ curve(dBS7(x, mu = 0.1, sigma = 0.1), from = 0.0000001, to = 5, #No funciona
       ylab = "f(t)",      
       xlab = "t")          
 
-curve(dBS7(x, mu = 0.2, sigma = 0.1),  add = TRUE, col = "black", lty = 2, lwd = 2) 
-curve(dBS7(x, mu = 0.5, sigma = 0.1),  add = TRUE, col = "black", lty = 3, lwd = 2) 
-curve(dBS7(x, mu = 0.75, sigma = 0.1), add = TRUE, col = "gray",  lty = 1, lwd = 2) 
-curve(dBS7(x, mu = 1, sigma = 0.1),    add = TRUE, col = "gray",  lty = 2, lwd = 2) 
-curve(dBS7(x, mu = 1.5, sigma = 0.1),  add = TRUE, col = "gray",  lty = 3, lwd = 2) 
+curve(dBS7(x, mu = 0.2, sigma = 0.5),  add = TRUE, col = "black", lty = 2, lwd = 2) 
+curve(dBS7(x, mu = 0.5, sigma = 0.5),  add = TRUE, col = "black", lty = 3, lwd = 2) 
+curve(dBS7(x, mu = 0.75, sigma = 0.5), add = TRUE, col = "gray",  lty = 1, lwd = 2) 
+curve(dBS7(x, mu = 1, sigma = 0.5),    add = TRUE, col = "gray",  lty = 2, lwd = 2) 
+curve(dBS7(x, mu = 1.5, sigma = 0.5),  add = TRUE, col = "gray",  lty = 3, lwd = 2) 
 
 legend("topright",
        col = c("black", "black", "black", "gray", "gray", "gray"),
