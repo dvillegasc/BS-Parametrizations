@@ -1,4 +1,4 @@
-dBS9 <- function(x, mu=1, sigma=0.5, log=FALSE){ #mu = varianza   y  sigma = alpha
+dBS9 <- function(x, mu=1, sigma=0.5, log=FALSE){ #mu = μ   y  sigma = Φ
   if (any(mu <= 0)) stop(paste("mu must be positive", "\n", ""))
   if (any(sigma <= 1))  stop(paste("sigma must be positive", "\n", "")) #(based on the variance 2)
   

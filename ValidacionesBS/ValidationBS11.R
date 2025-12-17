@@ -177,7 +177,7 @@ legend("topright",
        cex = 0.9,        
        legend = c("β = 0.75", "β = 0.95", "β = 1", "β = 1.15", "β = 1.25", "β = 1.5"))
 
-  #-------------------------------- Grafica 3 --------------------------------
+#-------------------------------- Grafica 3 --------------------------------
 
 varBS11 <- function(mu, sigma) {
   return ((mu^3)/(sigma) + (5*mu^4)/(4*sigma^2))
@@ -202,10 +202,9 @@ plot(sigma1, var_values,
 
 
 legend(x= 0.32, y= 300,
-       lty = 1,
        bty="n",
        cex = 1,       
-       legend = expression(beta == 2))
+       legend = c("β = 2"))
 
 
 

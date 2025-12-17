@@ -202,10 +202,9 @@ plot(sigma1, var_values,
 
 
 legend(x= 0.30, y= 1900,
-       lty = 1,
        bty="n",
        cex = 1,       
-       legend = expression(omega == 2))
+       legend = c("ω = 2"))
 
 
 

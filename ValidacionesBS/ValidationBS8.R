@@ -40,65 +40,6 @@ dldd_manual = function(y, mu, sigma) {
 }
 
 
-# Second derivates
-
-d2ldm2_manual <- function(y, mu, sigma) {
-  a0 <- (2 * sqrt(sigma - 1)) / sqrt(5)
-  b0 <- sqrt(5 * mu) / (2 * sqrt(sigma * (sigma - 1)))
-  db_dm <- b0 / (2 * mu)
-  
-  term1 <- (1 / (y + b0)) * db_dm
-  term2 <- -1 / (2 * b0) * db_dm
-  term3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
-  
-  dldm <- term1 + term2 + term3
-  
-  return(-dldm * dldm) 
-}
-
-d2ldd2_manual = function(y, mu, sigma) {
-  a0 <- (2 * sqrt(sigma - 1)) / sqrt(5)
-  b0 <- sqrt(5 * mu) / (2 * sqrt(sigma * (sigma - 1)))
-  
-  da_ds <- 1 / sqrt(5 * (sigma - 1))
-  db_ds <- -b0 * (2 * sigma - 1) / (2 * sigma * (sigma - 1))
-  
-  term1 <- (-1 / a0) * da_ds
-  term2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
-  term3 <- (1 / (y + b0)) * db_ds
-  term4 <- (-1 / (2 * b0)) * db_ds
-  term5 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_ds
-  
-  dldd <- term1 + term2 + term3 + term4 + term5
-  
-  return(-dldd * dldd)
-}
-
-d2ldmdd_manual = function(y, mu, sigma) {
-  a0 <- (2 * sqrt(sigma - 1)) / sqrt(5)
-  b0 <- sqrt(5 * mu) / (2 * sqrt(sigma * (sigma - 1)))
-  db_dm <- b0 / (2 * mu)
-  da_ds <- 1 / sqrt(5 * (sigma - 1))
-  db_ds <- -b0 * (2 * sigma - 1) / (2 * sigma * (sigma - 1))
-  
-  # dldm
-  m1 <- (1 / (y + b0)) * db_dm
-  m2 <- -1 / (2 * b0) * db_dm
-  m3 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_dm
-  dldm <- m1 + m2 + m3
-  
-  # dldd
-  d1 <- (-1 / a0) * da_ds
-  d2 <- (1 / a0^3) * ((y / b0) + (b0 / y) - 2) * da_ds
-  d3 <- (1 / (y + b0)) * db_ds
-  d4 <- (-1 / (2 * b0)) * db_ds
-  d5 <- (1 / (2 * a0^2)) * ((y / b0^2) - (1 / y)) * db_ds
-  dldd <- d1 + d2 + d3 + d4 + d5
-  
-  return(-dldm * dldd)
-}
-
-
 #Derivadas computacionales
 
 dldm_compu <- function(y, mu, sigma) {
@@ -230,7 +171,7 @@ legend("topright",
 #------------------------ Grafica 2 ------------------------------------
 
 
-curve(dBS8(x, mu = 5, sigma= 1.5), from = 0.0000001, to = 4,
+curve(dBS8(x, mu = 5/10, sigma= 1.5), from = 0.0000001, to = 4,
       #add= TRUE,
       ylim = c(0, 0.85),
       col = "black",        
@@ -241,15 +182,15 @@ curve(dBS8(x, mu = 5, sigma= 1.5), from = 0.0000001, to = 4,
       xlab = "t",
       main = "")          
 
-curve(dBS8(x, mu = 10, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=2, lwd = 2)
+curve(dBS8(x, mu = 10/10, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=2, lwd = 2)
 
-curve(dBS8(x, mu = 15, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=3, lwd = 2)
+curve(dBS8(x, mu = 15/10, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=3, lwd = 2)
 
-curve(dBS8(x, mu = 20, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=1, lwd = 2)
+curve(dBS8(x, mu = 20/10, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=1, lwd = 2)
 
-curve(dBS8(x, mu = 25, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=2, lwd = 2)
+curve(dBS8(x, mu = 25/10, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=2, lwd = 2)
 
-curve(dBS8(x, mu = 30, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=3, lwd = 2)
+curve(dBS8(x, mu = 30/10, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=3, lwd = 2)
 
 
 legend("topright",
@@ -258,3 +199,5 @@ legend("topright",
        bty="n",
        cex = 0.9,        
        legend = c("σ² = 5", "σ² = 10","σ² = 15", "σ² = 20", "σ² = 25", "σ² = 30"))
+
+

@@ -1,10 +1,10 @@
 BS13 <- function(mu.link = "log", sigma.link = "log"){
-  mstats <- checklink("mu.link", "dBS13", substitute(mu.link),
+  mstats <- checklink("mu.link", "BS13", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))
-  dstats <- checklink("sigma.link", "dBS13", substitute(sigma.link),
+  dstats <- checklink("sigma.link", "BS13", substitute(sigma.link),
                       c("log", "logit", "probit", "own"))
   structure(
-    list(family = c("dBS13", "Birnbaum-Saunders - thirteenth parameterization"),
+    list(family = c("BS13", "Birnbaum-Saunders - Thirteenth parameterization"),
          parameters = list(mu=TRUE, sigma=TRUE),
          nopar = 2,
          type = "Continuous",

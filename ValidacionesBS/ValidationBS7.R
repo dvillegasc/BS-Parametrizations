@@ -200,65 +200,55 @@ exp(coef(mod, what="sigma"))
 
 summary(mod)
 
-#------------------------ Grafica 1 ------------------------------------
+#------------------------ Grafica 1 ------------------------
 
 curve(dBS7(x, mu = 10, sigma= 0.1), from = 0.0000001, to = 40,
-      #add= TRUE,
       ylim = c(0, 0.35),
-      col = "deepskyblue",        
+      col = "black",        
       lwd = 2,              
       las = 1,
+      lty = 1,            
       type= "l",
-      ylab = "f(x)",      
-      xlab = "x")          
+      ylab = "f(t)",      
+      xlab = "t")          
 
-curve(dBS7(x, mu = 10, sigma= 0.2), add = TRUE, col = "gold", type= "l", lwd = 2)
-
-curve(dBS7(x, mu = 10, sigma= 0.4), add = TRUE, col = "red", type= "l", lwd = 2)
-
-curve(dBS7(x, mu = 10, sigma= 0.5), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
-
-curve(dBS7(x, mu = 10, sigma= 0.75), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
-
-curve(dBS7(x, mu = 10, sigma= 1), add = TRUE, col = "navy", type= "l", lwd = 2)
-
+curve(dBS7(x, mu = 10, sigma= 0.2),  add = TRUE, col = "black", lty = 2, lwd = 2) 
+curve(dBS7(x, mu = 10, sigma= 0.4),  add = TRUE, col = "black", lty = 3, lwd = 2) 
+curve(dBS7(x, mu = 10, sigma= 0.5),  add = TRUE, col = "gray",  lty = 1, lwd = 2) 
+curve(dBS7(x, mu = 10, sigma= 0.75), add = TRUE, col = "gray",  lty = 2, lwd = 2) 
+curve(dBS7(x, mu = 10, sigma= 1),    add = TRUE, col = "gray",  lty = 3, lwd = 2)
 
 legend("topright",
-       col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
-       lty = 1,
+       col = c("black", "black", "black", "gray", "gray", "gray"),
+       lty = c(1, 2, 3, 1, 2, 3),
+       lwd = 2,
        bty="n",
        cex = 0.9,        
        legend = c("α = 0.1","α = 0.2", "α = 0.4", "α = 0.5", "α = 0.75", "α = 1"))
 
 
-#------------------------ Grafica 2 ------------------------------------
-
-
+#------------------------ Grafica 2 ------------------------
 
 curve(dBS7(x, mu = 0.1, sigma = 0.1), from = 0.0000001, to = 5,
-      #add= TRUE,
-      ylim = c(0, 1.6),
-      col = "deepskyblue",        
+      ylim = c(0, 2),
+      col = "black",        
       lwd = 2,              
       las = 1,
+      lty = 1,              
       type= "l",
-      ylab = "f(x)",      
-      xlab = "x")          
+      ylab = "f(t)",      
+      xlab = "t")          
 
-curve(dBS7(x, mu = 0.2, sigma = 0.1), add = TRUE, col = "gold", type= "l", lwd = 2)
-
-curve(dBS7(x, mu = 0.5, sigma = 0.1), add = TRUE, col = "red", type= "l", lwd = 2)
-
-curve(dBS7(x, mu = 0.75, sigma = 0.1), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
-
-curve(dBS7(x, mu = 1, sigma = 0.1), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
-
-curve(dBS7(x, mu = 1.5, sigma = 0.1), add = TRUE, col = "navy", type= "l", lwd = 2)
-
+curve(dBS7(x, mu = 0.2, sigma = 0.1),  add = TRUE, col = "black", lty = 2, lwd = 2) 
+curve(dBS7(x, mu = 0.5, sigma = 0.1),  add = TRUE, col = "black", lty = 3, lwd = 2) 
+curve(dBS7(x, mu = 0.75, sigma = 0.1), add = TRUE, col = "gray",  lty = 1, lwd = 2) 
+curve(dBS7(x, mu = 1, sigma = 0.1),    add = TRUE, col = "gray",  lty = 2, lwd = 2) 
+curve(dBS7(x, mu = 1.5, sigma = 0.1),  add = TRUE, col = "gray",  lty = 3, lwd = 2) 
 
 legend("topright",
-       col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
-       lty = 1,
+       col = c("black", "black", "black", "gray", "gray", "gray"),
+       lty = c(1, 2, 3, 1, 2, 3),
+       lwd = 2,
        bty="n",
        cex = 0.9,        
        legend = c("μ = 0.1", "μ = 1","μ = 1.5", "μ = 2", "μ = 2.5", "μ = 3"))

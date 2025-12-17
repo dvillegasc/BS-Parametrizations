@@ -198,11 +198,10 @@ plot(sigma1, var_values,
      las = 1)      
 
 
-legend(x= 0.30, y= 22,
-       lty = 1,
+legend(x= 0.31, y= 22,
        bty="n",
        cex = 1,       
-       legend = expression(beta == 1))
+       legend = c("β = 1"))
     
 
 

@@ -22,24 +22,6 @@ dldd_manual <- function(y, sigma, mu) {
 }
 
 
-# Second derivates
-
-d2ldm2_manual <- function(y, sigma, mu) {
-  deriv1 <- dldm_manual(y, mu, sigma)
-  return(-deriv1 * deriv1)
-}
-
-d2ldd2_manual <- function(y, sigma, mu) {
-  deriv1 <- dldd_manual(y, mu, sigma)
-  return(-deriv1 * deriv1)
-}
-
-d2ldmdd_manual <- function(y, sigma, mu) {
-  dldm <- dldm_manual(y, mu, sigma)
-  dldd <- dldd_manual(y, mu, sigma)
-  return(-dldm * dldd)
-}
-
 #Derivadas computacionales
 
     dldm_compu <- function(y, mu, sigma) {
@@ -66,51 +48,27 @@ d2ldmdd_manual <- function(y, sigma, mu) {
       return(dldd)
     }
     
-    #Segundas derivadas compu
-    d2ldm2_compu <- function(y, mu, sigma) {
-      
-      dm <- gamlss::numeric.deriv(
-        expr = dBS4(y, mu, sigma, log = TRUE), 
-        theta = "mu",
-        deltha= 1e-04)
-      
-      d2ldm2 <- as.vector(attr(dm, "hessian"))[1, 1]
-      return(d2ldm2)
-    }
-    
-    
-    d2ldd2_compu <- function(y, mu, sigma) {
-      
-      ds <- gamlss::numeric.deriv(
-        expr = dBS4(y, mu, sigma, log = TRUE), 
-        theta = "sigma")
-      
-      d2ldd2 <- as.vector(attr(ds, "hessian"))[1, 1]
-      return(d2ldd2)
-    }
     
     
     
+# PRUEBA
+    
+y_test     <- c(1, 2, 5, 15)
+mu_test    <- 0.7
+sigma_test <- 0.75
+    
+cat("--- Verificación de dldm (derivada de mu) ---\n")
+manual_mu <- dldm_manual(y = y_test, mu = mu_test, sigma = sigma_test)
+compu_mu  <- dldm_compu(y = y_test, mu = mu_test, sigma = sigma_test)
+    
+print(data.frame(y = y_test, manual = manual_mu, computacional = compu_mu))
     
     
-    # PRUEBA
+cat("\n--- Verificación de dldd (derivada de sigma) ---\n")
+manual_sigma <- dldd_manual(y = y_test, mu = mu_test, sigma = sigma_test)
+compu_sigma  <- dldd_compu(y = y_test, mu = mu_test, sigma = sigma_test)
     
-    y_test     <- c(1, 2, 5, 15)
-    mu_test    <- 0.7
-    sigma_test <- 0.75
-    
-    cat("--- Verificación de dldm (derivada de mu) ---\n")
-    manual_mu <- dldm_manual(y = y_test, mu = mu_test, sigma = sigma_test)
-    compu_mu  <- dldm_compu(y = y_test, mu = mu_test, sigma = sigma_test)
-    
-    print(data.frame(y = y_test, manual = manual_mu, computacional = compu_mu))
-    
-    
-    cat("\n--- Verificación de dldd (derivada de sigma) ---\n")
-    manual_sigma <- dldd_manual(y = y_test, mu = mu_test, sigma = sigma_test)
-    compu_sigma  <- dldd_compu(y = y_test, mu = mu_test, sigma = sigma_test)
-    
-    print(data.frame(y = y_test, manual = manual_sigma, computacional = compu_sigma))
+print(data.frame(y = y_test, manual = manual_sigma, computacional = compu_sigma))
     
 
     
@@ -137,69 +95,68 @@ exp(coef(mod, what="sigma"))
 summary(mod)
 
 
-#-------------------------------- Grafica 1 --------------------------------
+#---------------------------------- Grafica 1 ---------------------------------
 
-    
-    
 curve(dBS4(x, mu = 1.5, sigma= 5), from = 0.0000001, to = 10,
       ylim = c(0, 1.7),
-      col = "navy",       
-      lwd = 2,            
+      col = "black",        
+      lwd = 2,              
       las = 1,
+      lty = 1,              
       type= "l",
-      ylab = "f(x)",      
-      xlab = "x")          
-    
-curve(dBS4(x, mu = 2, sigma= 5), add = TRUE, col = "deepskyblue", type= "l", lwd = 2)
-    
-curve(dBS4(x, mu = 3, sigma= 5), add = TRUE, col = "gold", type= "l", lwd = 2)
-    
-curve(dBS4(x, mu = 3.5, sigma= 5), add = TRUE, col = "red", type= "l", lwd = 2)
-    
-curve(dBS4(x, mu = 4, sigma= 5), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
+      ylab = "f(t)",      
+      xlab = "t")          
 
-curve(dBS4(x, mu = 4.5, sigma= 5), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
-    
+curve(dBS4(x, mu = 2, sigma= 5),   add = TRUE, col = "black", lty = 2, lwd = 2) 
+curve(dBS4(x, mu = 3, sigma= 5),   add = TRUE, col = "black", lty = 3, lwd = 2) 
+curve(dBS4(x, mu = 3.5, sigma= 5), add = TRUE, col = "gray",  lty = 1, lwd = 2) 
+curve(dBS4(x, mu = 4, sigma= 5),   add = TRUE, col = "gray",  lty = 2, lwd = 2) 
+curve(dBS4(x, mu = 4.5, sigma= 5), add = TRUE, col = "gray",  lty = 3, lwd = 2) 
 
 legend("topright",
-       col = c("navy", "deepskyblue", "gold", "red", "#F28E2B","#F96F9B"),
-       lty = 1,
+       col = c("black", "black", "black", "gray", "gray", "gray"),
+       lty = c(1, 2, 3, 1, 2, 3),
+       lwd = 2,
        bty="n",
-       cex = 0.9,       
-       legend = c("μA = 1.5","μA = 2", "μA = 3", "μA = 3.5", "μA = 4", "μA = 4.5"))
-    
-    
-#------------------------ Grafica 2 ------------------------------------
+       cex = 0.9,        
+       legend = c(expression(mu[A] == 1.5), 
+                  expression(mu[A] == 2), 
+                  expression(mu[A] == 3), 
+                  expression(mu[A] == 3.5), 
+                  expression(mu[A] == 4), 
+                  expression(mu[A] == 4.5)))
 
 
+#----------------------------------- Grafica 2 ----------------------------
 
 curve(dBS4(x, mu = 5, sigma= 0.4), from = 0.0000001, to = 1,
-      #add= TRUE,
       ylim = c(0, 9),
-      col = "deepskyblue",       
-      lwd = 2,            
+      col = "black",        
+      lwd = 2,              
       las = 1,
+      lty = 1,              
       type= "l",
-      ylab = "f(x)",      
-      xlab = "x")          
+      ylab = "f(t)",      
+      xlab = "t")          
 
-curve(dBS4(x, mu = 5, sigma= 0.5), add = TRUE, col = "gold", type= "l", lwd = 2)
-
-curve(dBS4(x, mu = 5, sigma= 1), add = TRUE, col = "red", type= "l", lwd = 2)
-
-curve(dBS4(x, mu = 5, sigma= 1.5), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
-
-curve(dBS4(x, mu = 5, sigma= 2), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
-
-curve(dBS4(x, mu = 5, sigma= 3), add = TRUE, col = "navy", type= "l", lwd = 2)
-
+curve(dBS4(x, mu = 5, sigma= 0.5), add = TRUE, col = "black", lty = 2, lwd = 2) 
+curve(dBS4(x, mu = 5, sigma= 1),   add = TRUE, col = "black", lty = 3, lwd = 2) 
+curve(dBS4(x, mu = 5, sigma= 1.5), add = TRUE, col = "gray",  lty = 1, lwd = 2) 
+curve(dBS4(x, mu = 5, sigma= 2),   add = TRUE, col = "gray",  lty = 2, lwd = 2) 
+curve(dBS4(x, mu = 5, sigma= 3),   add = TRUE, col = "gray",  lty = 3, lwd = 2) 
 
 legend("topright",
-       col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
-       lty = 1,
+       col = c("black", "black", "black", "gray", "gray", "gray"),
+       lty = c(1, 2, 3, 1, 2, 3),
+       lwd = 2,
        bty="n",
-       cex = 0.9,       
-       legend = c("λ = 0.4", "λ = 0.5","λ = 1", "λ = 1.5", "λ = 2.5", "λ = 3"))
+       cex = 0.9,        
+       legend = c(expression(lambda[A] == 0.4), 
+                  expression(lambda[A] == 0.5),
+                  expression(lambda[A] == 1), 
+                  expression(lambda[A] == 1.5), 
+                  expression(lambda[A] == 2.5), 
+                  expression(lambda[A] == 3)))
 
 #-------------------------------- Grafica 3 --------------------------------
 
@@ -227,8 +184,7 @@ plot(mu, var_values,
      las = 1)             
 
 
-legend(x= 2.2, y= 1.7,
-       lty = 1,
+legend(x= 2.1, y= 1.7,
        bty="n",
        cex = 0.9,       
        legend = expression(lambda[A] == 2))

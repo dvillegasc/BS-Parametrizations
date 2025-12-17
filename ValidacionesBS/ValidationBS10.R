@@ -200,11 +200,10 @@ plot(sigma1, var_values,
      las = 1)      
 
 
-  legend(x= 0.32, y= 1.5,
-       lty = 1,
+legend(x= 0.32, y= 1.5,
        bty="n",
        cex = 1,       
-       legend = expression(tau == 1))
+       legend = c("τ = 1"))
 
 
 

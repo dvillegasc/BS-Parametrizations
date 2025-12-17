@@ -1,10 +1,10 @@
 BS10 <- function(mu.link = "log", sigma.link = "log"){
-  mstats <- checklink("mu.link", "dBS10", substitute(mu.link),
+  mstats <- checklink("mu.link", "BS10", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))
-  dstats <- checklink("sigma.link", "dBS10", substitute(sigma.link),
+  dstats <- checklink("sigma.link", "BS10", substitute(sigma.link),
                       c("log", "logit", "probit", "own"))
   structure(
-    list(family = c("dBS10", "Birnbaum-Saunders - tenth parameterization"),
+    list(family = c("BS10", "Birnbaum-Saunders - Tenth parameterization"),
          parameters = list(mu=TRUE, sigma=TRUE),
          nopar = 2,
          type = "Continuous",
