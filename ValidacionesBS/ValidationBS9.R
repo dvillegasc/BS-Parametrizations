@@ -102,189 +102,93 @@ summary(mod)
 
 #------------------------ Grafica 1 ------------------------------------
 
-curve(dBS9(x, mu = 10, sigma= 1.05), from = 0.0000001, to = 25,
-      #add= TRUE,
-      ylim = c(0, 0.25),
-      col = "black",        
-      lwd = 2,              
-      las = 1,
-      type= "l",
-      ylab = "f(t)",      
-      xlab = "t",
-      main = "")          
-
-curve(dBS9(x, mu = 10, sigma= 1.1), add = TRUE, col = "black", type= "l", lty=2, lwd = 2)
-
-curve(dBS9(x, mu = 10, sigma= 1.3), add = TRUE, col = "black", type= "l", lty=3, lwd = 2)
-
-curve(dBS9(x, mu = 10, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=1, lwd = 2)
-
-curve(dBS9(x, mu = 10, sigma= 1.7), add = TRUE, col = "gray", type= "l", lty=2, lwd = 2)
-
-curve(dBS9(x, mu = 10, sigma= 1.9), add = TRUE, col = "gray", type= "l", lty=3, lwd = 2)
-
-
-legend("topright",
-       col = c("black", "black", "black", "gray", "gray", "gray"),
-       lty = c(1, 2, 3, 1, 2, 3),
-       bty="n",
-       cex = 0.9,        
-       legend = c("γ = 1.05","γ = 1.1", "γ = 1.3", "γ = 1.5", "γ = 1.7", "γ = 1.9"))
-
-
-#------------------------ Grafica 2 ------------------------------------
-
-
-curve(dBS9(x, mu = 5, sigma= 1.5), from = 0.0000001, to = 4,
-      #add= TRUE,
-      ylim = c(0, 0.85),
-      col = "black",        
-      lwd = 2,              
-      las = 1,
-      type= "l",
-      ylab = "f(t)",      
-      xlab = "t",
-      main = "")          
-
-curve(dBS9(x, mu = 10, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=2, lwd = 2)
-
-curve(dBS9(x, mu = 15, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=3, lwd = 2)
-
-curve(dBS9(x, mu = 20, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=1, lwd = 2)
-
-curve(dBS9(x, mu = 25, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=2, lwd = 2)
-
-curve(dBS9(x, mu = 30, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=3, lwd = 2)
-
-
-legend("topright",
-       col = c("black", "black", "black", "gray", "gray", "gray"),
-       lty = c(1, 2, 3, 1, 2, 3),
-       bty="n",
-       cex = 0.9,        
-       legend = c("σ² = 5", "σ² = 10","σ² = 15", "σ² = 20", "σ² = 25", "σ² = 30"))
-
-#-------------------------------- Grafica 3 --------------------------------
-
-varBS9 <- function(mu, sigma) {
-  numerador <- ((mu^2) * (sigma - 1) * (5*sigma - 3))
-  denominador <- sigma^2
-  return(numerador / denominador)
-}
-
-
-mu <- 2
-sigma <- seq(1.05, 10, length.out = 100) 
-
-var_values <- varBS9(mu = mu, sigma = sigma)
-
-
-plot(mu, var_values, 
-     type = "l",           
-     lwd = 2,              
-     ylim = c(0, 20),      
-     xlim = c(1, 250),      
-     xlab = expression(mu[A]),  # Símbolo griego delta
-     ylab = "Var[T]",      
-     main = "",            
-     las = 1)             
-
-
-legend(x= 2.2, y= 1.7,
-       lty = 1,
-       bty="n",
-       cex = 0.9,       
-       legend = expression(lambda[A] == 2))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#------------------------ Grafica 1 ------------------------------------
-
 curve(dBS9(x, mu = 2, sigma= 1.1), from = 0.0000001, to = 3,
-      ylim = c(0, 0.9),
-      col = "deepskyblue",        
+      #add= TRUE,
+      ylim = c(0, 0.92),
+      col = "black",        
       lwd = 2,              
       las = 1,
       type= "l",
-      ylab = "f(x)",      
-      xlab = "x",
+      ylab = "f(t)",      
+      xlab = "t",
       main = "")          
 
-curve(dBS9(x, mu = 2, sigma= 1.3), add = TRUE, col = "gold", type= "l", lwd = 2)
-curve(dBS9(x, mu = 2, sigma= 1.5), add = TRUE, col = "red", type= "l", lwd = 2)
-curve(dBS9(x, mu = 2, sigma= 1.7), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
-curve(dBS9(x, mu = 2, sigma= 1.9), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
-curve(dBS9(x, mu = 2, sigma= 2.1), add = TRUE, col = "navy", type= "l", lwd = 2)
+curve(dBS9(x, mu = 2, sigma= 1.3), add = TRUE, col = "black", type= "l", lty=2, lwd = 2)
+
+curve(dBS9(x, mu = 2, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=3, lwd = 2)
+
+curve(dBS9(x, mu = 2, sigma= 1.7), add = TRUE, col = "gray", type= "l", lty=1, lwd = 2)
+
+curve(dBS9(x, mu = 2, sigma= 1.9), add = TRUE, col = "gray", type= "l", lty=2, lwd = 2)
+
+curve(dBS9(x, mu = 2, sigma= 2.1), add = TRUE, col = "gray", type= "l", lty=3, lwd = 2)
+
 
 legend("topright",
-       col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
-       lty = 1, bty="n", cex = 0.9,        
-       legend = c("φ = 1.1","φ = 1.3", "φ = 1.5", "φ = 1.7", "φ = 1.9", "φ = 2.1"))
+       col = c("black", "black", "black", "gray", "gray", "gray"),
+       lty = c(1, 2, 3, 1, 2, 3),
+       bty="n",
+       cex = 0.9,        
+       legend = c("Φ = 1.1", "Φ = 1.3", "Φ = 1.5", "Φ = 1.7", "Φ = 1.9", "Φ = 2.1"))
 
 
 #------------------------ Grafica 2 ------------------------------------
+
 
 curve(dBS9(x, mu = 0.75, sigma= 1.5), from = 0.0000001, to = 2,
-      ylim = c(0, 1.35),
-      col = "deepskyblue",        
+      #add= TRUE,
+      ylim = c(0, 1.5),
+      col = "black",        
       lwd = 2,              
       las = 1,
       type= "l",
-      ylab = "f(x)",      
-      xlab = "x",
-      main = "(b) Variando Media (Phi=2)")          
+      ylab = "f(t)",      
+      xlab = "t",
+      main = "")          
 
-curve(dBS9(x, mu = 1, sigma= 1.5), add = TRUE, col = "gold", type= "l", lwd = 2)
-curve(dBS9(x, mu = 1.25, sigma= 1.5), add = TRUE, col = "red", type= "l", lwd = 2)
-curve(dBS9(x, mu = 1.5, sigma= 1.5), add = TRUE, col = "#F28E2B", type= "l", lwd = 2)
-curve(dBS9(x, mu = 1.75, sigma= 1.5), add = TRUE, col = "#F96F9B", type= "l", lwd = 2)
-curve(dBS9(x, mu = 2, sigma= 1.5), add = TRUE, col = "navy", type= "l", lwd = 2)
+curve(dBS9(x, mu = 1, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=2, lwd = 2)
+
+curve(dBS9(x, mu = 1.25, sigma= 1.5), add = TRUE, col = "black", type= "l", lty=3, lwd = 2)
+
+curve(dBS9(x, mu = 1.5, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=1, lwd = 2)
+
+curve(dBS9(x, mu = 1.75, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=2, lwd = 2)
+
+curve(dBS9(x, mu = 2, sigma= 1.5), add = TRUE, col = "gray", type= "l", lty=3, lwd = 2)
+
 
 legend("topright",
-       col = c("deepskyblue", "gold", "red", "#F28E2B","#F96F9B", "navy"),
-       lty = 1, bty="n", cex = 0.9,        
+       col = c("black", "black", "black", "gray", "gray", "gray"),
+       lty = c(1, 2, 3, 1, 2, 3),
+       bty="n",
+       cex = 0.9,        
        legend = c("μ = 0.75", "μ = 1","μ = 1.25", "μ = 1.5", "μ = 1.75", "μ = 2"))
 
 #-------------------------------- Grafica 3 --------------------------------
 
 varBS9 <- function(mu, sigma) {
-  numerador <- ((mu^2) * (sigma - 1) * (5*sigma - 3))
-  denominador <- sigma^2
-  return(numerador / denominador)
+  return (((mu^2) * (sigma - 1) * (5*sigma - 3)) / sigma^2)
 }
 
+
 mu <- 2
-sigma <- seq(1.01, 250, length.out = 500) 
+sigma <- seq(1.1, 250, length.out = 1000) 
 
 var_values <- varBS9(mu = mu, sigma = sigma)
 
-# 3. Graficar
+
 plot(sigma, var_values, 
-     type = "l",            
+     type = "l",           
      lwd = 2,              
-     ylim = c(0, 21),       # Límite en Y un poco más arriba de 20
-     xlim = c(0, 250),      # Límite en X igual a la imagen
-     xlab = expression(phi), 
+     ylim = c(0.1, 20),      
+     xlim = c(0.1, 250),      
+     xlab = expression(phi),  # Símbolo griego delta
      ylab = "Var[T]",      
      main = "",            
-     las = 1)
+     las = 1)             
 
-# Linea de la asintota teórica: 5 * mu^2
-# Para mu=2, el limite es 5*(2^2) = 20
-abline(h = 5 * mu^2, col="red", lty=2)
 
-text(125, 10, labels = expression(mu == 2), cex = 1.2)
+legend(x= 100, y= 10,
+       bty="n",
+       cex = 0.9,       
+       legend = c("μ = 2"))
