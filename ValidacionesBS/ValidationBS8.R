@@ -66,32 +66,6 @@ dldd_compu <- function(y, mu, sigma) {
   return(dldd)
 }
 
-#Segundas derivadas compu
-d2ldm2_compu <- function(y, mu, sigma) {
-  
-  dm <- gamlss::numeric.deriv(
-    expr = dBS8(y, mu, sigma, log = TRUE), 
-    theta = "mu",
-    deltha= 1e-04)
-  
-  d2ldm2 <- as.vector(attr(dm, "hessian"))[1, 1]
-  return(d2ldm2)
-}
-
-
-d2ldd2_compu <- function(y, mu, sigma) {
-  
-  ds <- gamlss::numeric.deriv(
-    expr = dBS8(y, mu, sigma, log = TRUE), 
-    theta = "sigma")
-  
-  d2ldd2 <- as.vector(attr(ds, "hessian"))[1, 1]
-  return(d2ldd2)
-}
-
-
-
-
 
 # PRUEBA
 
@@ -171,7 +145,7 @@ legend("topright",
 #------------------------ Grafica 2 ------------------------------------
 
 
-curve(dBS8(x, mu = 5/10, sigma= 1.5), from = 0.0000001, to = 4,
+curve(dBS8(x, mu = 5/10, sigma= 1.5), from = 0.0000001, to = 4, #Requirio una transformacion sobre mu
       #add= TRUE,
       ylim = c(0, 0.85),
       col = "black",        
