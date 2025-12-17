@@ -1,6 +1,6 @@
 #Verificacion de la dBS13
 
-integrate(dBS13, lower=0, upper=999, mu=1.5, sigma=1.5) #1 with absolute error < 0.00011
+integrate(dBS13, lower=0, upper=999, mu=1.5, sigma=1.5)
 
 #Verificacion de las derivadas
 
@@ -73,8 +73,8 @@ dldd_compu <- function(y, mu, sigma) {
 # PRUEBA
 
 y_test     <- c(1, 2, 5, 15)
-mu_test    <- 10 # Varianza
-sigma_test <- 1.5 # Gamma (>1)
+mu_test    <- 10 
+sigma_test <- 1.5 
 
 cat("--- Verificación de dldm (derivada de mu) ---\n")
 manual_mu <- dldm_manual(y = y_test, mu = mu_test, sigma = sigma_test)
@@ -92,8 +92,6 @@ print(data.frame(y = y_test, manual = manual_sigma, computacional = compu_sigma)
 
 
 #-------------------------- Validation Familia ----------------------------------
-
-
 
 n <- 1000
 
@@ -149,7 +147,6 @@ legend("topright",
 
 
 curve(dBS13(x, mu = 3, sigma= 10), from = 0, to = 1.5,
-      #add= TRUE,
       ylim = c(0, 4.5),
       col = "black",        
       lwd = 2,              

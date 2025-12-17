@@ -1,6 +1,6 @@
 #Verificacion de la dBS4
 
-integrate(dBS4, lower=0, upper=99, mu=1.7, sigma=2.3) #1 with absolute error < 2.8e-06
+integrate(dBS4, lower=0, upper=99, mu=1.7, sigma=2.3)
 
 
 #Verificacion de las derivadas
@@ -161,9 +161,7 @@ legend("topright",
 #-------------------------------- Grafica 3 --------------------------------
 
 varBS4 <- function(mu, sigma) {
-  numerador <- ((sigma*mu) + 5/4)
-  denominador <- mu^4
-  return(numerador / denominador)
+  return ( ((sigma*mu) + 5/4) / (mu^4) )
 }
 
 
@@ -178,7 +176,7 @@ plot(mu, var_values,
      lwd = 2,              
      ylim = c(0, 3.5),      
      xlim = c(1, 4),      
-     xlab = expression(mu[A]),  # Símbolo griego delta
+     xlab = expression(mu[A]),
      ylab = "Var[T]",      
      main = "",            
      las = 1)             

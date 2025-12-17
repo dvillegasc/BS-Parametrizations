@@ -1,6 +1,6 @@
 #Verificacion de la dBS6
 
-integrate(dBS6, lower=0, upper=99, mu=1.7, sigma=2.3) #1 with absolute error < 0.00011
+integrate(dBS6, lower=0, upper=99, mu=1.7, sigma=2.3)
 
 #Verificacion de las derivadas
 
@@ -66,9 +66,6 @@ dldd_compu <- function(y, mu, sigma) {
   dldd <- as.vector(attr(ds, "gradient"))
   return(dldd)
 }
-
-
-
 
 
 # PRUEBA
@@ -170,9 +167,7 @@ legend("topright",
 #-------------------------------- Grafica 3 --------------------------------
 
 varBS6 <- function(mu, sigma) {
-  numerador <- ((mu*sigma)^2 * (4+5*sigma^2))
-  denominador <- ((2 + sigma^2)^2)
-  return(numerador / denominador)
+  return (((mu*sigma)^2 * (4+5*sigma^2)) / ((2 + sigma^2)^2))
 }
 
 
@@ -187,7 +182,7 @@ plot(sigma, var_values,
      lwd = 2,              
      ylim = c(0, 20),      
      xlim = c(0, 20),      
-     xlab = expression(alpha),  # Símbolo griego delta
+     xlab = expression(alpha),
      ylab = "Var[T]",      
      main = "",            
      las = 1)             

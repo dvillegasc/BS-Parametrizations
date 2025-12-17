@@ -1,6 +1,6 @@
 #Verificacion de la dBS12
 
-integrate(dBS12, lower=0, upper=999, mu=1.5, sigma=1.5) #1 with absolute error < 0.00011
+integrate(dBS12, lower=0, upper=999, mu=1.5, sigma=1.5)
 
 #Verificacion de las derivadas
 
@@ -70,8 +70,8 @@ dldd_compu <- function(y, mu, sigma) {
 # PRUEBA
 
 y_test     <- c(1, 2, 5, 15)
-mu_test    <- 10 # Varianza
-sigma_test <- 1.5 # Gamma (>1)
+mu_test    <- 10 
+sigma_test <- 1.5 
 
 cat("--- Verificación de dldm (derivada de mu) ---\n")
 manual_mu <- dldm_manual(y = y_test, mu = mu_test, sigma = sigma_test)
@@ -113,7 +113,6 @@ summary(mod)
 #------------------------ Grafica 1 ------------------------------------
 
 curve(dBS12(x, mu = 1, sigma= 0.5), from = 0.0000001, to = 2,
-      #add= TRUE,
       ylim = c(0, 2.2),
       col = "black",        
       lwd = 2,              
@@ -146,7 +145,6 @@ legend("topright",
 
 
 curve(dBS12(x, mu = 0.75, sigma= 25), from = 0.25, to = 2.5,
-      #add= TRUE,
       ylim = c(0, 2.7),
       col = "black",        
       lwd = 2,              

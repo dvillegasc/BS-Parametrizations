@@ -1,6 +1,6 @@
 #Verificacion de la dBS9
 
-integrate(dBS9, lower=0, upper=999, mu=10, sigma=1.5) #1 with absolute error < 0.00011
+integrate(dBS9, lower=0, upper=999, mu=10, sigma=1.5)
 
 #Verificacion de las derivadas
 
@@ -39,7 +39,7 @@ dldd_manual <- function(y, mu, sigma) {
 }
 
 
-# --- Computacionales ---
+# Computacionales
 
 dldm_compu <- function(y, mu, sigma) {
   dm <- gamlss::numeric.deriv(expr = dBS9(y, mu, sigma, log = TRUE), theta = "mu", delta = 1e-04)
@@ -55,13 +55,11 @@ dldd_compu <- function(y, mu, sigma) {
 
 
 
-
-
 # PRUEBA
 
 y_test     <- c(1, 2, 5, 15)
-mu_test    <- 10 # Varianza
-sigma_test <- 1.5 # Gamma (>1)
+mu_test    <- 10 
+sigma_test <- 1.5
 
 cat("--- Verificación de dldm (derivada de mu) ---\n")
 manual_mu <- dldm_manual(y = y_test, mu = mu_test, sigma = sigma_test)
@@ -103,7 +101,6 @@ summary(mod)
 #------------------------ Grafica 1 ------------------------------------
 
 curve(dBS9(x, mu = 2, sigma= 1.1), from = 0.0000001, to = 3,
-      #add= TRUE,
       ylim = c(0, 0.92),
       col = "black",        
       lwd = 2,              
@@ -136,7 +133,6 @@ legend("topright",
 
 
 curve(dBS9(x, mu = 0.75, sigma= 1.5), from = 0.0000001, to = 2,
-      #add= TRUE,
       ylim = c(0, 1.5),
       col = "black",        
       lwd = 2,              
@@ -182,7 +178,7 @@ plot(sigma, var_values,
      lwd = 2,              
      ylim = c(0.1, 20),      
      xlim = c(0.1, 250),      
-     xlab = expression(phi),  # Símbolo griego delta
+     xlab = expression(phi),
      ylab = "Var[T]",      
      main = "",            
      las = 1)             
