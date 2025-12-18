@@ -101,6 +101,7 @@ true_si <- 5
 
 y <- rBS13(n=n, mu=true_mu, sigma=true_si)
 
+
 library(gamlss)
 mod <- gamlss(y ~ 1, family=BS13,
               n.cyc = 100)
@@ -114,7 +115,6 @@ summary(mod)
 #------------------------ Grafica 1 ------------------------------------
 
 curve(dBS13(x, mu = 5, sigma= 10), from = 0.0000001, to = 0.7,
-      #add= TRUE,
       ylim = c(0, 16.5),
       col = "black",        
       lwd = 2,              

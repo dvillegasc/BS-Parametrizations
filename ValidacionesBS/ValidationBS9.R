@@ -83,8 +83,8 @@ print(data.frame(y = y_test, manual = manual_sigma, computacional = compu_sigma)
 n <- 1000
 
 # True parameters are:
-true_mu <- 1
-true_si <- 5
+true_mu <- 0.1
+true_si <- 50
 
 y <- rBS9(n=n, mu=true_mu, sigma=true_si)
 
