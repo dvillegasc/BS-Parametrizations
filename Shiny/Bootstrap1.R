@@ -103,7 +103,7 @@ server <- function(input, output, session) {
     }
   })
   
-  # 3. Lectura de Datos CRUDOS
+  # 3. Lectura de Datos iniciales
   datos_crudos <- reactive({
     req(input$file1)
     archivo <- input$file1
