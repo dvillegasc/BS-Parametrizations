@@ -4,7 +4,11 @@ library(dplyr)
 library(gamlss)
 library(readxl)
 
-# Tener cargado BS6 y dBS6
+# ------------- IMPORTANTE -----------------
+# Tener cargado BS6 y dBS6. Esto es lo que yo implemente. Aqui:
+
+# https://github.com/dvillegasc/BS-Parametrizations/blob/main/BS6.R
+# https://github.com/dvillegasc/BS-Parametrizations/blob/main/dBS6.R
 
 #---------------------
 # --- Interfaz ---
