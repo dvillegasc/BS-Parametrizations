@@ -1,3 +1,41 @@
+#' The Birnbaum-Saunders family - Fourth parameterization (Based on the mean)
+#' 
+#' @description 
+#' The function \code{BS6()} defines the Birnbaum-Saunders distribution, 
+#' a two-parameter distribution, for a \code{gamlss.family} object 
+#' to be used in GAMLSS fitting using the function \code{gamlss()}.
+#' 
+#' @param mu.link defines the mu.link, with "log" link as the default 
+#' for the mu parameter.
+#' @param sigma.link defines the sigma.link, with "log" link as the default 
+#' for the sigma parameter.
+#' 
+#' @references
+#' Santos-Neto, M., Cysneiros, F. J. A., Leiva, V., & Ahmed, S. E. (2012). 
+#' On new parameterizations of the Birnbaum-Saunders distribution. 
+#' Pakistan Journal of Statistics, 28(1), 1-26.
+#' 
+#' @seealso \link{dBS6}.
+#' 
+#' @details 
+#' The Birnbaum-Saunders distribution with parameters \code{mu} and \code{sigma} 
+#' (where \code{mu} represents the true mean and \code{sigma} represents the shape parameter \eqn{\alpha}) 
+#' has density given by
+#' 
+#' \eqn{f(x|\mu,\sigma) = \frac{\exp(1/\sigma^2)\sqrt{2+\sigma^2}}{4\sigma\sqrt{\pi\mu}x^{3/2}} \left[ x + \frac{2\mu}{2+\sigma^2} \right] \exp\left( -\frac{1}{2\sigma^2} \left[ \frac{\{2+\sigma^2\}x}{2\mu} + \frac{2\mu}{\{2+\sigma^2\}x} \right] \right)}
+#' 
+#' for \eqn{x>0}, \eqn{\mu>0} and \eqn{\sigma>0}. In this parameterization, 
+#' \eqn{E(X) = \mu} and 
+#' \eqn{Var(X) = [\mu\sigma]^2 \left[ \frac{4+5\sigma^2}{(2+\sigma^2)^2} \right]}.
+#' 
+#' @returns Returns a \code{gamlss.family} object which can be used to fit a 
+#' BS6 distribution in the \code{gamlss()} function.
+#' 
+#' @example examples/examples_BS6.R
+#' 
+#' @importFrom gamlss.dist checklink
+#' @importFrom gamlss rqres.plot
+#' @export
 BS6 <- function(mu.link = "log", sigma.link = "log"){
   mstats <- checklink("mu.link", "BS6", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))

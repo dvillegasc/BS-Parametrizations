@@ -1,3 +1,41 @@
+#' The Birnbaum-Saunders family - Eighth parameterization (First Tweedie)
+#' 
+#' @description 
+#' The function \code{BS10()} defines the Birnbaum-Saunders distribution, 
+#' a two-parameter distribution, for a \code{gamlss.family} object 
+#' to be used in GAMLSS fitting using the function \code{gamlss()}.
+#' 
+#' @param mu.link defines the mu.link, with "log" link as the default 
+#' for the mu parameter (representing \eqn{\tau}).
+#' @param sigma.link defines the sigma.link, with "log" link as the default 
+#' for the sigma parameter (representing \eqn{\omega}).
+#' 
+#' @references
+#' Santos-Neto, M., Cysneiros, F. J. A., Leiva, V., & Ahmed, S. E. (2012). 
+#' On new parameterizations of the Birnbaum-Saunders distribution. 
+#' Pakistan Journal of Statistics, 28(1), 1-26.
+#' 
+#' @seealso \link{dBS10}.
+#' 
+#' @details 
+#' The Birnbaum-Saunders distribution with parameters \code{mu} and \code{sigma} 
+#' (where \code{mu} represents \eqn{\tau} and \code{sigma} represents \eqn{\omega}) 
+#' has density given by
+#' 
+#' \eqn{f(x|\mu,\sigma) = \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{\sigma}{\mu^2} \left[ \frac{2x}{\mu^2} + \frac{\mu^2}{2x} - 2 \right] \right) \frac{[2x + \mu^2]\sqrt{\sigma}}{2\mu^2 \sqrt{x^3}}}
+#' 
+#' for \eqn{x>0}, \eqn{\mu>0} and \eqn{\sigma>0}. In this parameterization, 
+#' \eqn{E(X) = \frac{\mu^2}{2} + \frac{\mu^4}{8\sigma}} and 
+#' \eqn{Var(X) = \frac{\mu^6}{8\sigma} + \frac{5\mu^8}{64\sigma^2}}.
+#' 
+#' @returns Returns a \code{gamlss.family} object which can be used to fit a 
+#' BS10 distribution in the \code{gamlss()} function.
+#' 
+#' @example examples/examples_BS10.R
+#' 
+#' @importFrom gamlss.dist checklink
+#' @importFrom gamlss rqres.plot
+#' @export
 BS10 <- function(mu.link = "log", sigma.link = "log"){
   mstats <- checklink("mu.link", "BS10", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))
@@ -111,7 +149,7 @@ BS10 <- function(mu.link = "log", sigma.link = "log"){
          rqres = expression(rqres(pfun="pBS10", type="Continuous",y=y,mu=mu,sigma=sigma)),
          
          mu.initial    = expression({mu    <- rep(mean(y), length(y))}),
-         sigma.initial = expression({sigma <- rep(2, length(y)) }),
+         sigma.initial = expression({sigma <- rep(1, length(y)) }),
          
          mu.valid = function(mu) all(mu > 0) ,
          sigma.valid = function(sigma) all(sigma > 0),

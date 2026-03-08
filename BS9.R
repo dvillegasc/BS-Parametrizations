@@ -1,3 +1,41 @@
+#' The Birnbaum-Saunders family - Seventh parameterization (Mean and Bounded Variance)
+#' 
+#' @description 
+#' The function \code{BS9()} defines the Birnbaum-Saunders distribution, 
+#' a two-parameter distribution, for a \code{gamlss.family} object 
+#' to be used in GAMLSS fitting using the function \code{gamlss()}.
+#' 
+#' @param mu.link defines the mu.link, with "log" link as the default 
+#' for the mu parameter (representing the mean).
+#' @param sigma.link defines the sigma.link, with "log" link as the default 
+#' for the sigma parameter (representing \eqn{\phi > 1}).
+#' 
+#' @references
+#' Santos-Neto, M., Cysneiros, F. J. A., Leiva, V., & Ahmed, S. E. (2012). 
+#' On new parameterizations of the Birnbaum-Saunders distribution. 
+#' Pakistan Journal of Statistics, 28(1), 1-26.
+#' 
+#' @seealso \link{dBS9}.
+#' 
+#' @details 
+#' The Birnbaum-Saunders distribution with parameters \code{mu} and \code{sigma} 
+#' (where \code{mu} represents the true mean and \code{sigma} represents \eqn{\phi > 1}) 
+#' has density given by
+#' 
+#' \eqn{f(x|\mu,\sigma) = \frac{\exp(1/[2\{\sigma-1\}])[x\sigma + \mu]}{4\sqrt{\pi\sigma[\sigma-1]\mu x^{3/2}}} \exp\left( -\frac{1}{4[\sigma-1]} \left[ \frac{x\sigma}{\mu} + \frac{\mu}{x\sigma} \right] \right)}
+#' 
+#' for \eqn{x>0}, \eqn{\mu>0} and \eqn{\sigma>1}. In this parameterization, 
+#' \eqn{E(X) = \mu} and 
+#' \eqn{Var(X) = \mu^2 \frac{[\sigma-1][5\sigma-3]}{\sigma^2}}.
+#' 
+#' @returns Returns a \code{gamlss.family} object which can be used to fit a 
+#' BS9 distribution in the \code{gamlss()} function.
+#' 
+#' @example examples/examples_BS9.R
+#' 
+#' @importFrom gamlss.dist checklink
+#' @importFrom gamlss rqres.plot
+#' @export
 BS9 <- function(mu.link = "log", sigma.link = "log"){
   mstats <- checklink("mu.link", "BS9", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))
@@ -108,7 +146,7 @@ BS9 <- function(mu.link = "log", sigma.link = "log"){
          rqres = expression(rqres(pfun="pBS9", type="Continuous",y=y,mu=mu,sigma=sigma)),
          
          mu.initial    = expression({mu    <- rep(mean(y), length(y))}),
-         sigma.initial = expression({sigma <- rep(2, length(y)) }),
+         sigma.initial = expression({sigma <- rep(1.5, length(y)) }),
          
          mu.valid = function(mu) all(mu > 0) ,
          sigma.valid = function(sigma) all(sigma > 1),

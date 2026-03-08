@@ -1,3 +1,41 @@
+#' The Birnbaum-Saunders family - Fifth parameterization (Based on the variance)
+#' 
+#' @description 
+#' The function \code{BS7()} defines the Birnbaum-Saunders distribution, 
+#' a two-parameter distribution, for a \code{gamlss.family} object 
+#' to be used in GAMLSS fitting using the function \code{gamlss()}.
+#' 
+#' @param mu.link defines the mu.link, with "log" link as the default 
+#' for the mu parameter (representing the variance).
+#' @param sigma.link defines the sigma.link, with "log" link as the default 
+#' for the sigma parameter (representing the shape).
+#' 
+#' @references
+#' Santos-Neto, M., Cysneiros, F. J. A., Leiva, V., & Ahmed, S. E. (2012). 
+#' On new parameterizations of the Birnbaum-Saunders distribution. 
+#' Pakistan Journal of Statistics, 28(1), 1-26.
+#' 
+#' @seealso \link{dBS7}.
+#' 
+#' @details 
+#' The Birnbaum-Saunders distribution with parameters \code{mu} and \code{sigma} 
+#' (where \code{mu} represents the true variance \eqn{\sigma^2} and \code{sigma} represents the shape parameter \eqn{\alpha}) 
+#' has density given by
+#' 
+#' \eqn{f(x|\mu,\sigma) = \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{1}{2\sigma^2} \left[ \frac{\sigma\sqrt{4+5\sigma^2}}{2\sqrt{\mu}x^{-1}} + \frac{2\sqrt{\mu}\{x\sigma\}^{-1}}{\sqrt{4+5\sigma^2}} - 2 \right] \right) \times \left[ \frac{\{x\sigma\}^{-1/2}\{4+5\sigma^2\}^{1/4}}{2^{3/2}\mu^{1/4}} + \frac{\mu^{1/4}}{\{x\sigma\}^{3/2}\sqrt{2}\{4+5\sigma^2\}^{1/4}} \right]}
+#' 
+#' for \eqn{x>0}, \eqn{\mu>0} and \eqn{\sigma>0}. In this parameterization, 
+#' \eqn{E(X) = \frac{[2+\sigma^2]\sqrt{\mu}}{\sigma\sqrt{4+5\sigma^2}}} and 
+#' \eqn{Var(X) = \mu}.
+#' 
+#' @returns Returns a \code{gamlss.family} object which can be used to fit a 
+#' BS7 distribution in the \code{gamlss()} function.
+#' 
+#' @example examples/examples_BS7.R
+#' 
+#' @importFrom gamlss.dist checklink
+#' @importFrom gamlss rqres.plot
+#' @export
 BS7 <- function(mu.link = "log", sigma.link = "log"){
   mstats <- checklink("mu.link", "BS7", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))
@@ -107,7 +145,7 @@ BS7 <- function(mu.link = "log", sigma.link = "log"){
          G.dev.incr = function(y,mu,sigma,...) -2*dBS7(y,mu,sigma,log=TRUE),
          rqres = expression(rqres(pfun="pBS7", type="Continuous",y=y,mu=mu,sigma=sigma)),
          
-         mu.initial    = expression({mu    <- rep(mean(y), length(y))}),
+         mu.initial    = expression({mu    <- rep(var(y), length(y))}),
          sigma.initial = expression({sigma <- rep(0.5, length(y)) }),
          
          mu.valid = function(mu) all(mu > 0) ,

@@ -1,3 +1,41 @@
+#' The Birnbaum-Saunders family - Third parameterization (Based on GLM)
+#' 
+#' @description 
+#' The function \code{BS5()} defines the Birnbaum-Saunders distribution, 
+#' a two-parameter distribution, for a \code{gamlss.family} object 
+#' to be used in GAMLSS fitting using the function \code{gamlss()}.
+#' 
+#' @param mu.link defines the mu.link, with "log" link as the default 
+#' for the mu parameter.
+#' @param sigma.link defines the sigma.link, with "log" link as the default 
+#' for the sigma parameter.
+#' 
+#' @references
+#' Santos-Neto, M., Cysneiros, F. J. A., Leiva, V., & Ahmed, S. E. (2012). 
+#' On new parameterizations of the Birnbaum-Saunders distribution. 
+#' Pakistan Journal of Statistics, 28(1), 1-26.
+#' 
+#' @seealso \link{dBS5}.
+#' 
+#' @details 
+#' The Birnbaum-Saunders distribution with parameters \code{mu} and \code{sigma} 
+#' (where \code{sigma} represents the precision parameter \eqn{\delta}) 
+#' has density given by
+#' 
+#' \eqn{f(x|\mu,\sigma) = \frac{\exp(\sigma/2)\sqrt{\sigma+1}}{4\sqrt{\pi\mu}x^{3/2}} \left[ x + \frac{\sigma\mu}{\sigma+1} \right] \exp\left( -\frac{\sigma}{4} \left[ \frac{x(\sigma+1)}{\sigma\mu} + \frac{\sigma\mu}{x(\sigma+1)} \right] \right)}
+#' 
+#' for \eqn{x>0}, \eqn{\mu>0} and \eqn{\sigma>0}. In this parameterization, 
+#' \eqn{E(X) = \mu} and 
+#' \eqn{Var(X) = \mu^2 \left[ \frac{2\sigma+5}{(\sigma+1)^2} \right]}.
+#' 
+#' @returns Returns a \code{gamlss.family} object which can be used to fit a 
+#' BS5 distribution in the \code{gamlss()} function.
+#' 
+#' @example examples/examples_BS5.R
+#' 
+#' @importFrom gamlss.dist checklink
+#' @importFrom gamlss rqres.plot
+#' @export
 BS5 <- function(mu.link = "log", sigma.link = "log"){
   mstats <- checklink("mu.link", "BS5", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))

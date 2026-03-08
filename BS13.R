@@ -1,3 +1,41 @@
+#' The Birnbaum-Saunders family - Eleventh parameterization (Fourth Tweedie)
+#' 
+#' @description 
+#' The function \code{BS13()} defines the Birnbaum-Saunders distribution, 
+#' a two-parameter distribution, for a \code{gamlss.family} object 
+#' to be used in GAMLSS fitting using the function \code{gamlss()}.
+#' 
+#' @param mu.link defines the mu.link, with "log" link as the default 
+#' for the mu parameter (representing the scale \eqn{\omega}).
+#' @param sigma.link defines the sigma.link, with "log" link as the default 
+#' for the sigma parameter (representing the shape \eqn{\psi}).
+#' 
+#' @references
+#' Santos-Neto, M., Cysneiros, F. J. A., Leiva, V., & Ahmed, S. E. (2012). 
+#' On new parameterizations of the Birnbaum-Saunders distribution. 
+#' Pakistan Journal of Statistics, 28(1), 1-26.
+#' 
+#' @seealso \link{dBS13}.
+#' 
+#' @details 
+#' The Birnbaum-Saunders distribution with parameters \code{mu} and \code{sigma} 
+#' (where \code{mu} represents \eqn{\omega} and \code{sigma} represents \eqn{\psi}) 
+#' has density given by
+#' 
+#' \eqn{f(x|\mu,\sigma) = \frac{1}{\sqrt{2\pi}} \exp\left( -\frac{\sigma}{2} \left[ \frac{x\sigma}{\mu} + \frac{\mu}{x\sigma} - 2 \right] \right) \frac{[x\sigma + \mu]}{2\sqrt{\mu x^3}}}
+#' 
+#' for \eqn{x>0}, \eqn{\mu>0} and \eqn{\sigma>0}. In this parameterization, 
+#' \eqn{E(X) = \frac{\mu}{\sigma} + \frac{\mu}{2\sigma^2}} and 
+#' \eqn{Var(X) = \frac{\mu^2}{\sigma^3} + \frac{5\mu^2}{4\sigma^4}}.
+#' 
+#' @returns Returns a \code{gamlss.family} object which can be used to fit a 
+#' BS13 distribution in the \code{gamlss()} function.
+#' 
+#' @example examples/examples_BS13.R
+#' 
+#' @importFrom gamlss.dist checklink
+#' @importFrom gamlss rqres.plot
+#' @export
 BS13 <- function(mu.link = "log", sigma.link = "log"){
   mstats <- checklink("mu.link", "BS13", substitute(mu.link),
                       c("log", "inverse", "identity", "own"))
@@ -109,8 +147,8 @@ BS13 <- function(mu.link = "log", sigma.link = "log"){
          G.dev.incr = function(y,mu,sigma,...) -2*dBS13(y,mu,sigma,log=TRUE),
          rqres = expression(rqres(pfun="pBS13", type="Continuous",y=y,mu=mu,sigma=sigma)),
          
-         mu.initial    = expression({mu    <- rep(mean(y), length(y))}),
-         sigma.initial = expression({sigma <- rep(2, length(y)) }),
+         mu.initial    = expression({mu    <- rep(median(y), length(y))}),
+         sigma.initial = expression({sigma <- rep(1, length(y)) }),
          
          mu.valid = function(mu) all(mu > 0) ,
          sigma.valid = function(sigma) all(sigma > 0),
