@@ -3,7 +3,7 @@ if (!dir.exists("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Simuls"
   dir.create("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Simuls")
 }
 
-
+# ALGO ESTA MAL
 library("parSim")
 
 parSim(
@@ -100,13 +100,13 @@ if (!dir.exists("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs"))
 
 p1 <- ggplot(dat, aes(x=n, y=bias_mu, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("Bias for ", mu))) +
-  ylim(min(dat$bias_mu), 0.005)
+  ylab(expression(paste("Bias for ", mu)))
+p1
 
 p2 <- ggplot(dat, aes(x=n, y=bias_si, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("Bias for ", sigma)))+
-  ylim(min(dat$bias_mu), 0.1)
+  ylab(expression(paste("Bias for ", sigma)))
+p2
 
 p1_final <- p1 + theme_bw(base_size = 13)
 p2_final <- p2 + theme_bw(base_size = 13)

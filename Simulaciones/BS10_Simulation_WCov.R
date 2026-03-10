@@ -97,7 +97,7 @@ if (!dir.exists("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs"))
   dir.create("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs")
 }
 
-
+library(ggplot2)
 p1 <- ggplot(dat, aes(x=n, y=bias_mu, colour=case)) +
   geom_line() + 
   ylab(expression(paste("Bias for ", mu))) +

@@ -101,11 +101,12 @@ p1 <- ggplot(dat, aes(x=n, y=bias_mu, colour=case)) +
   geom_line() + 
   ylab(expression(paste("Bias for ", mu))) +
   ylim(min(dat$bias_mu), 0.1)
+p1
 
 p2 <- ggplot(dat, aes(x=n, y=bias_si, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("Bias for ", sigma)))+
-  ylim(min(dat$bias_mu), 0.1)
+  ylab(expression(paste("Bias for ", sigma)))
+p2
 
 p1_final <- p1 + theme_bw(base_size = 13)
 p2_final <- p2 + theme_bw(base_size = 13)
@@ -118,10 +119,12 @@ ggsave(filename="C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs/bi
 p3 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", mu)))
+p3
 
 p4 <- ggplot(dat, aes(x=n, y=mse_si, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", sigma)))
+p4
 
 p3_final <- p3 + theme_bw(base_size = 13)
 p4_final <- p4 + theme_bw(base_size = 13)
