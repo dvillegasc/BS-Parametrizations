@@ -18,7 +18,7 @@ gendat <- function(n) {
 parSim(
   ### SIMULATION CONDITIONS
   
-  n = c(200, 400, 600, 800, 1000),
+  n = c(200, 600, 1000, 1400),
   
   reps = 1000,                     # repetitions
   write = TRUE,                     # Writing to a file
@@ -28,8 +28,8 @@ parSim(
   export = c("gendat", "dBS", "pBS", "qBS", "rBS", "hBS", "dBS5", "pBS5", "qBS5", "rBS5", "hBS5", "BS5"),
   
   expression = {
-    require(gamlss)
-    require(gamlss2)
+    library(gamlss)
+    library(gamlss2)
     
     # True parameter values
     dat <- gendat(n=n)
@@ -85,27 +85,26 @@ library(tidyr)
 library(ggplot2)
 library(patchwork)
 
-trim <- 0.10
+trim <- 0.03
 
 dat <- datos %>% group_by(n) %>% 
   summarise(nobs = n(),
             
             bias_b0 = mean(beta_0_hat - (0.5), trim=trim, na.rm=TRUE),
             bias_b1 = mean(beta_1_hat - (0.4), trim=trim, na.rm=TRUE),
-            bias_g0 = mean(gamma_0_hat - (2.0), trim=trim, na.rm=TRUE),
+            bias_g0 = mean(gamma_0_hat - (0.2), trim=trim, na.rm=TRUE),
             bias_g1 = mean(gamma_1_hat - (0.6), trim=trim, na.rm=TRUE),
             
             mse_b0 = mean((beta_0_hat - (0.5))^2, trim=trim, na.rm=TRUE),
             mse_b1 = mean((beta_1_hat - (0.4))^2, trim=trim, na.rm=TRUE),
-            mse_g0 = mean((gamma_0_hat - (2.0))^2, trim=trim, na.rm=TRUE),
+            mse_g0 = mean((gamma_0_hat - (0.2))^2, trim=trim, na.rm=TRUE),
             mse_g1 = mean((gamma_1_hat - (0.6))^2, trim=trim, na.rm=TRUE)
   )
 
 dat
 
-#png("Bias_Sim_WithCovariates.png", width = 8, height = 4.5, units = "in", res = 300)
 
-# Legend and colores
+# Legend and colors
 leyenda <- c(expression(hat(beta)[0]), 
              expression(hat(beta)[1]), 
              expression(hat(gamma)[0]), 

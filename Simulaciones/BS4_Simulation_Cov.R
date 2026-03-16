@@ -18,8 +18,7 @@ gendat <- function(n) {
 parSim(
   ### SIMULATION CONDITIONS
   
-  #n = seq(from= 500, to= 700, by= 200),
-  n = c(200, 400, 600, 800, 1000),
+  n = c(200, 600, 1000, 1400),
   
   reps = 1000,                     # repetitions
   write = TRUE,                     # Writing to a file

@@ -18,7 +18,7 @@ gendat <- function(n) {
 parSim(
   ### SIMULATION CONDITIONS
   
-  n = c(200, 400, 600, 800, 1000),
+  n = c(200, 600, 1000, 1400),
   
   reps = 1000,                     # repetitions
   write = TRUE,                     # Writing to a file
@@ -85,7 +85,7 @@ library(tidyr)
 library(ggplot2)
 library(patchwork)
 
-trim <- 0.10
+trim <- 0.03
 
 dat <- datos %>% group_by(n) %>% 
   summarise(nobs = n(),
@@ -156,9 +156,4 @@ ggsave(filename = "C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs/
        width = 7.5, 
        height = 3.5, 
        units = "in")
-
-#dev.off()
-
-#ggsave(filename="Figs/bias_mse_simul_WithCAnalizeError.png", width = 12, height = 6, 
-#units = "in", plot=p1+p2)
 

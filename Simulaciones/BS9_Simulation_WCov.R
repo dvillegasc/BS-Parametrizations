@@ -8,8 +8,8 @@ library("parSim")
 
 parSim(
   ### SIMULATION CONDITIONS
-  n = c(200, 400, 600, 800, 1000),
-  mu = c(1, 1.5, 2),
+  n = c(200, 600, 1000, 1400),
+  mu = c(1, 2),
   sigma = c(1.5, 1.9),
   
   reps = 1000,                                # repetitions
@@ -64,9 +64,7 @@ datos <- do.call(rbind, lista_datos)
 datos$case <- with(datos, 
                    ifelse(mu==1 & sigma==1.5, 1, 
                           ifelse(mu==1 & sigma==1.9, 2,
-                                 ifelse(mu==1.5 & sigma==1.5, 3,
-                                        ifelse(mu==1.5 & sigma==1.9, 4, 
-                                               ifelse(mu==2 & sigma==1.5, 5, 6))))))
+                                 ifelse(mu==2 & sigma==1.5, 3, 4))))
 datos$case <- as.factor(datos$case)
 
 # To analize the results --------------------------------------------------
@@ -76,7 +74,7 @@ library(tidyr)
 library(ggplot2)
 library(patchwork)
 
-trim <- 0.10 # percentage of values to be trimmed
+trim <- 0.03 # percentage of values to be trimmed
 
 dat <- datos %>% group_by(n, mu, case) %>% 
   summarise(nobs = n(),
@@ -100,14 +98,12 @@ if (!dir.exists("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs"))
 
 p1 <- ggplot(dat, aes(x=n, y=bias_mu, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("Bias for ", mu))) +
-  ylim(min(dat$bias_mu), 0.01)
+  ylab(expression(paste("Bias for ", mu)))
 p1
 
 p2 <- ggplot(dat, aes(x=n, y=bias_si, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("Bias for ", sigma)))+
-  ylim(min(dat$bias_mu), 0.25)
+  ylab(expression(paste("Bias for ", sigma)))
 p2
 
 p1_final <- p1 + theme_bw(base_size = 13)
@@ -121,10 +117,12 @@ ggsave(filename="C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs/bi
 p3 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", mu)))
+p3
 
 p4 <- ggplot(dat, aes(x=n, y=mse_si, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", sigma)))
+p4
 
 p3_final <- p3 + theme_bw(base_size = 13)
 p4_final <- p4 + theme_bw(base_size = 13)
@@ -132,41 +130,3 @@ p4_final <- p4 + theme_bw(base_size = 13)
 ggsave(filename="C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs/mse_BS9_Sim_WCov.pdf", width=12, height=6,
        plot=p3_final+p4_final)
 
-
-# Tables
-
-trim <- 0.10 # percentage of values to be trimmed
-
-dat <- datos %>% group_by(n, mu) %>% 
-  summarise(nobs = n(),
-            mean_mu = mean(mu_hat, trim=trim, na.rm=TRUE),
-            ab_mu = mean(abs(mu_hat-mu), trim=trim, na.rm=TRUE),
-            mse_mu = mean((mu_hat - mu)^2, trim=trim, na.rm=TRUE)
-  )
-
-dat
-
-
-dat |> filter(mu == 1, sigma == 1) |> 
-  select(mean_mu, mean_si, ab_mu, ab_si, mse_mu, mse_si) -> a
-a[, -1]
-
-library(xtable)
-xtable(a[, -1])
-
-
-
-dat_summary <- datos %>% 
-  group_by(n, mu, case) %>%
-  summarise(
-    mean_mu = mean(mu_hat, trim=trim, na.rm=TRUE),
-    mse_mu = mean((mu_hat - mu)^2, trim=trim, na.rm=TRUE),
-    bias_mu = mean(mu_hat - mu, trim=trim, na.rm=TRUE),
-    .groups = 'drop'
-  )
-
-tabla_comparativa <- dat_summary %>%
-  filter(near(mu, 0.25)) %>%
-  select(n, "θ̂" = mean_mu, "Bias" = bias_mu, "MSE" = mse_mu)
-
-print(tabla_comparativa)
