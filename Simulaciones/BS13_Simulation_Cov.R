@@ -3,7 +3,7 @@ if (!dir.exists("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Simuls"
   dir.create("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Simuls")
 }
 
-
+#Falla
 library("parSim")
 
 gendat <- function(n) {
@@ -35,7 +35,9 @@ parSim(
     dat <- gendat(n=n)
     
     f   <- y ~ x1 | x2 
-    mod <- try(suppressMessages(gamlss2(f, family=BS13, data=dat)), silent = TRUE)
+    mod <- try(suppressMessages(gamlss2(f, family=BS13, data=dat, 
+                                        control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150),
+                                        optimizer = RS_CG)), silent = TRUE)
     
     if(inherits(mod, "try-error")) {
       stop("gamlss2 no convergió en esta repetición")

@@ -9,8 +9,8 @@ library("parSim")
 parSim(
   ### SIMULATION CONDITIONS
   n = c(200, 600, 1000, 1400),
-  mu = c(10, 20),
-  sigma = c(1.3, 1.5),
+  mu = c(1.5, 2),
+  sigma = c(1.3, 1.7),
   
   reps = 1000,                                # repetitions
   write = TRUE,                               # Writing to a file
@@ -62,9 +62,9 @@ lista_datos <- lapply(archivos, read.table, header = TRUE,
 datos <- do.call(rbind, lista_datos)
 
 datos$case <- with(datos, 
-                   ifelse(mu==10 & sigma==1.3, 1, 
-                          ifelse(mu==10 & sigma==1.5, 2,
-                                 ifelse(mu==30 & sigma==1.3, 3, 4))))
+                   ifelse(mu==1.5 & sigma==1.3, 1, 
+                          ifelse(mu==1.5 & sigma==1.7, 2,
+                                 ifelse(mu==2 & sigma==1.3, 3, 4))))
 datos$case <- as.factor(datos$case)
 
 # To analize the results --------------------------------------------------
