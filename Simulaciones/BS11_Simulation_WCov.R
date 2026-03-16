@@ -61,9 +61,9 @@ lista_datos <- lapply(archivos, read.table, header = TRUE,
 datos <- do.call(rbind, lista_datos)
 
 datos$case <- with(datos, 
-                   ifelse(mu==1 & sigma==1, 1, 
-                          ifelse(mu==1 & sigma==5, 2,
-                                 ifelse(mu==1.5 & sigma==1, 3, 4))))
+                   ifelse(mu==1 & sigma==1.2, 1, 
+                          ifelse(mu==1 & sigma==1.8, 2,
+                                 ifelse(mu==2.5 & sigma==1.2, 3, 4))))
 datos$case <- as.factor(datos$case)
 
 # To analize the results --------------------------------------------------
