@@ -9,8 +9,8 @@ library("parSim")
 gendat <- function(n) {
   x1 <- runif(n)
   x2 <- runif(n)
-  mu    <- exp(0.2 + 0.4 * x1) # 1.5 approximately
-  sigma <- exp(0.5 + 0.4 * x2) #  2  approximately
+  mu    <- exp(0.2 + 0.3 * x1) # 1.4 approximately
+  sigma <- exp(-0.2 + 0.4 * x2) #  1  approximately
   y <- rBS4(n=n, mu=mu, sigma=sigma)
   data.frame(y=y, x1=x1, x2=x2)
 }
@@ -28,26 +28,33 @@ parSim(
   export = c("gendat", "dBS", "pBS", "qBS", "rBS", "hBS", "dBS4", "pBS4", "qBS4", "rBS4", "hBS4", "BS4"),
   
   expression = {
-    require(gamlss)
-    require(gamlss2)
+    library(gamlss2)
     
     # True parameter values
     dat <- gendat(n=n)
     
     f   <- y ~ x1 | x2 
-    mod <- try(suppressMessages(gamlss2(f, family=BS4, data=dat)), silent = TRUE)
+    mod <- try(suppressMessages(
+      gamlss2(f, data = dat, family = BS4, 
+              control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150),
+              optimizer = RS_CG)
+    ), silent = TRUE)
     
-    if(inherits(mod, "try-error")) {
-      stop("gamlss2 no convergió en esta repetición")
+    if (class(mod)[1] == "try-error") {
+      beta_0_hat  <- NA
+      beta_1_hat  <- NA
+      gamma_0_hat  <- NA
+      gamma_1_hat  <- NA
     }
-    
-    coefs_mu <- coef(mod, what="mu")
-    coefs_sigma <- coef(mod, what="sigma")
-    
-    beta_0_hat  <- coefs_mu["(Intercept)"]
-    beta_1_hat  <- coefs_mu["x1"]
-    gamma_0_hat  <- coefs_sigma["(Intercept)"]
-    gamma_1_hat  <- coefs_sigma["x2"]
+    else {
+      coefs_mu <- coef(mod, what="mu")
+      coefs_sigma <- coef(mod, what="sigma")
+      
+      beta_0_hat  <- coefs_mu["(Intercept)"]
+      beta_1_hat  <- coefs_mu["x1"]
+      gamma_0_hat  <- coefs_sigma["(Intercept)"]
+      gamma_1_hat  <- coefs_sigma["x2"]
+    }
     
     
     # Results list:
@@ -85,26 +92,25 @@ library(tidyr)
 library(ggplot2)
 library(patchwork)
 
-trim <- 0.10
+trim <- 0.03
 
 dat <- datos %>% group_by(n) %>% 
   summarise(nobs = n(),
             
             bias_b0 = mean(beta_0_hat - (0.2), trim=trim, na.rm=TRUE),
-            bias_b1 = mean(beta_1_hat - (0.4), trim=trim, na.rm=TRUE),
-            bias_g0 = mean(gamma_0_hat - (0.5), trim=trim, na.rm=TRUE),
+            bias_b1 = mean(beta_1_hat - (0.3), trim=trim, na.rm=TRUE),
+            bias_g0 = mean(gamma_0_hat - (-0.2), trim=trim, na.rm=TRUE),
             bias_g1 = mean(gamma_1_hat - (0.4), trim=trim, na.rm=TRUE),
             
             mse_b0 = mean((beta_0_hat - (0.2))^2, trim=trim, na.rm=TRUE),
-            mse_b1 = mean((beta_1_hat - (0.4))^2, trim=trim, na.rm=TRUE),
-            mse_g0 = mean((gamma_0_hat - (0.5))^2, trim=trim, na.rm=TRUE),
+            mse_b1 = mean((beta_1_hat - (0.3))^2, trim=trim, na.rm=TRUE),
+            mse_g0 = mean((gamma_0_hat - (-0.2))^2, trim=trim, na.rm=TRUE),
             mse_g1 = mean((gamma_1_hat - (0.4))^2, trim=trim, na.rm=TRUE)
             
   )
 
 dat
 
-#png("Bias_Sim_WithCovariates.png", width = 8, height = 4.5, units = "in", res = 300)
 
 # Legend and colores
 leyenda <- c(expression(hat(beta)[0]), 
@@ -149,14 +155,10 @@ p1_final <- p1 + theme_bw(base_size = 13)
 p2_final <- p2 + theme_bw(base_size = 13)
 
 # Guardar el archivo PDF con las dimensiones correctas
-ggsave(filename = "Figs/bias_mse_BS4_Sim_Cov.pdf", 
+ggsave(filename = "C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs/bias_mse_BS4_Sim_Cov.pdf", 
        plot = p1_final + p2_final, 
        width = 7.5, 
        height = 3.5, 
        units = "in")
 
-#dev.off()
-
-#ggsave(filename="Figs/bias_mse_simul_WithCAnalizeError.png", width = 12, height = 6, 
-#units = "in", plot=p1+p2)
 

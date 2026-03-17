@@ -9,8 +9,8 @@ library("parSim")
 gendat <- function(n) {
   x1 <- runif(n)
   x2 <- runif(n)
-  mu    <- exp(1.4 + 0.4 * x1) # 5 approximately
-  sigma <- exp(2.0 + 0.6 * x2) #  10  approximately
+  mu    <- exp(0.5 + 0.4 * x1) # 5 approximately
+  sigma <- exp(0.3 + 0.5 * x2) #  10  approximately
   y <- rBS13(n=n, mu=mu, sigma=sigma)
   data.frame(y=y, x1=x1, x2=x2)
 }
@@ -35,14 +35,19 @@ parSim(
     dat <- gendat(n=n)
     
     f   <- y ~ x1 | x2 
-    mod <- try(suppressMessages(gamlss2(f, family=BS13, data=dat, 
-                                        control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150),
-                                        optimizer = RS_CG)), silent = TRUE)
+    mod <- try(suppressMessages(
+      gamlss2(f, data = dat, family = BS13, 
+              control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150),
+              optimizer = RS_CG) 
+    ), silent = TRUE)
     
-    if(inherits(mod, "try-error")) {
-      stop("gamlss2 no convergió en esta repetición")
+    if (class(mod)[1] == "try-error") {
+      beta_0_hat  <- NA
+      beta_1_hat  <- NA
+      gamma_0_hat  <- NA
+      gamma_1_hat  <- NA
     }
-    
+    else {
     coefs_mu <- coef(mod, what="mu")
     coefs_sigma <- coef(mod, what="sigma")
     
@@ -50,7 +55,7 @@ parSim(
     beta_1_hat  <- coefs_mu["x1"]
     gamma_0_hat  <- coefs_sigma["(Intercept)"]
     gamma_1_hat  <- coefs_sigma["x2"]
-    
+    }
     
     # Results list:
     Results <- list(
@@ -92,15 +97,15 @@ trim <- 0.03
 dat <- datos %>% group_by(n) %>% 
   summarise(nobs = n(),
             
-            bias_b0 = mean(beta_0_hat - (1.4), trim=trim, na.rm=TRUE),
+            bias_b0 = mean(beta_0_hat - (0.5), trim=trim, na.rm=TRUE),
             bias_b1 = mean(beta_1_hat - (0.4), trim=trim, na.rm=TRUE),
-            bias_g0 = mean(gamma_0_hat - (2.0), trim=trim, na.rm=TRUE),
-            bias_g1 = mean(gamma_1_hat - (0.6), trim=trim, na.rm=TRUE),
+            bias_g0 = mean(gamma_0_hat - (0.3), trim=trim, na.rm=TRUE),
+            bias_g1 = mean(gamma_1_hat - (0.5), trim=trim, na.rm=TRUE),
             
-            mse_b0 = mean((beta_0_hat - (1.4))^2, trim=trim, na.rm=TRUE),
+            mse_b0 = mean((beta_0_hat - (0.5))^2, trim=trim, na.rm=TRUE),
             mse_b1 = mean((beta_1_hat - (0.4))^2, trim=trim, na.rm=TRUE),
-            mse_g0 = mean((gamma_0_hat - (2.0))^2, trim=trim, na.rm=TRUE),
-            mse_g1 = mean((gamma_1_hat - (0.6))^2, trim=trim, na.rm=TRUE)
+            mse_g0 = mean((gamma_0_hat - (0.3))^2, trim=trim, na.rm=TRUE),
+            mse_g1 = mean((gamma_1_hat - (0.5))^2, trim=trim, na.rm=TRUE)
   )
 
 dat

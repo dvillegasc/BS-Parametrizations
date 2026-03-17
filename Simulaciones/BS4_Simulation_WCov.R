@@ -9,8 +9,8 @@ library("parSim")
 parSim(
   ### SIMULATION CONDITIONS
   n = c(200, 600, 1000, 1400),
-  mu = c(2, 4),
-  sigma = c(0.4, 2),
+  mu = c(1.2, 1.6),
+  sigma = c(0.8, 1.2),
   
   reps = 1000,                                # repetitions
   write = TRUE,                               # Writing to a file
@@ -20,34 +20,22 @@ parSim(
   export = c("dBS", "pBS", "qBS", "rBS", "hBS", "dBS4", "pBS4", "qBS4", "rBS4", "hBS4", "BS4"),
   
   expression = {
-    library(gamlss)
+    library(gamlss2)
 
     # True parameter values
     y <- rBS4(n=n, mu=mu, sigma=sigma)
     
-    if (sigma >= 2) {
-      
-      # RS_CG
-      mod <- try(suppressMessages(
-        gamlss2(y ~ 1, data = datos_sim, family = BS4, 
-                control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150),
-                optimizer = RS_CG)
-      ), silent = TRUE)
-      
-    } else {
-      
-      #RS
-      mod <- try(suppressMessages(
-        gamlss2(y ~ 1, data = datos_sim, family = BS4, 
-                control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150))
-      ), silent = TRUE)
-      
-    }
+    f   <- y ~ 1
+    mod <- try(suppressMessages(
+      gamlss2(f, family = BS4, 
+              control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150),
+              optimizer = RS_CG)
+    ), silent = TRUE)
     
-    if (inherits(mod, "try-error") || !mod$converged) {
+    if (class(mod)[1] == "try-error") {
       mu_hat    <- NA
       sigma_hat <- NA
-    } 
+    }
     else {
       mu_hat <- exp(coef(mod, what="mu")["(Intercept)"])
       sigma_hat <- exp(coef(mod, what="sigma")["(Intercept)"])
@@ -76,9 +64,9 @@ lista_datos <- lapply(archivos, read.table, header = TRUE,
                       sep = "", stringsAsFactors = FALSE)
 datos <- do.call(rbind, lista_datos)
 
-datos$case <- with(datos, ifelse(mu==2 & sigma==0.4, 1, 
-                                 ifelse(mu==2 & sigma==2, 2,
-                                        ifelse(mu==4 & sigma==0.4, 3, 4))))
+datos$case <- with(datos, ifelse(mu==1.2 & sigma==0.8, 1, 
+                                 ifelse(mu==1.2 & sigma==1.2, 2,
+                                        ifelse(mu==1.6 & sigma==0.8, 3, 4))))
 datos$case <- as.factor(datos$case)
 
 # To analize the results --------------------------------------------------
@@ -148,40 +136,3 @@ ggsave(filename="C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs/ms
        plot=p3_final+p4_final)
 
 
-# Tables
-
-trim <- 0.10 # percentage of values to be trimmed
-
-dat <- datos %>% group_by(n, mu) %>% 
-  summarise(nobs = n(),
-            mean_mu = mean(mu_hat, trim=trim, na.rm=TRUE),
-            ab_mu = mean(abs(mu_hat-mu), trim=trim, na.rm=TRUE),
-            mse_mu = mean((mu_hat - mu)^2, trim=trim, na.rm=TRUE)
-  )
-
-dat
-
-
-dat |> filter(mu == 1, sigma == 1) |> 
-  select(mean_mu, mean_si, ab_mu, ab_si, mse_mu, mse_si) -> a
-a[, -1]
-
-library(xtable)
-xtable(a[, -1])
-
-
-
-dat_summary <- datos %>% 
-  group_by(n, mu, case) %>%
-  summarise(
-    mean_mu = mean(mu_hat, trim=trim, na.rm=TRUE),
-    mse_mu = mean((mu_hat - mu)^2, trim=trim, na.rm=TRUE),
-    bias_mu = mean(mu_hat - mu, trim=trim, na.rm=TRUE),
-    .groups = 'drop'
-  )
-
-tabla_comparativa <- dat_summary %>%
-  filter(near(mu, 0.25)) %>%
-  select(n, "θ̂" = mean_mu, "Bias" = bias_mu, "MSE" = mse_mu)
-
-print(tabla_comparativa)

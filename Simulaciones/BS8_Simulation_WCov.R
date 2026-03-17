@@ -3,14 +3,14 @@ if (!dir.exists("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Simuls"
   dir.create("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Simuls")
 }
 
-#FALLA
+#Esta sospechoso
 library("parSim")
 
 parSim(
   ### SIMULATION CONDITIONS
   n = c(200, 600, 1000, 1400),
-  mu = c(1.5, 2),
-  sigma = c(1.3, 1.7),
+  mu = c(1.5, 3),
+  sigma = c(1.4, 2.2),
   
   reps = 1000,                                # repetitions
   write = TRUE,                               # Writing to a file
@@ -62,9 +62,9 @@ lista_datos <- lapply(archivos, read.table, header = TRUE,
 datos <- do.call(rbind, lista_datos)
 
 datos$case <- with(datos, 
-                   ifelse(mu==1.5 & sigma==1.3, 1, 
-                          ifelse(mu==1.5 & sigma==1.7, 2,
-                                 ifelse(mu==2 & sigma==1.3, 3, 4))))
+                   ifelse(mu==1.5 & sigma==1.4, 1, 
+                          ifelse(mu==1.5 & sigma==2.2, 2,
+                                 ifelse(mu==3 & sigma==1.4, 3, 4))))
 datos$case <- as.factor(datos$case)
 
 # To analize the results --------------------------------------------------
@@ -117,10 +117,12 @@ ggsave(filename="C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs/bi
 p3 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", mu)))
+p3
 
 p4 <- ggplot(dat, aes(x=n, y=mse_si, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", sigma)))
+p4
 
 p3_final <- p3 + theme_bw(base_size = 13)
 p4_final <- p4 + theme_bw(base_size = 13)

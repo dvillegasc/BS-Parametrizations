@@ -9,8 +9,8 @@ library("parSim")
 parSim(
   ### SIMULATION CONDITIONS
   n = c(200, 600, 1000, 1400),
-  mu = c(3, 10),
-  sigma = c(10, 25),
+  mu = c(1.5, 2.5),
+  sigma = c(1.5, 2),
   
   reps = 1000,                                # repetitions
   write = TRUE,                               # Writing to a file
@@ -27,7 +27,11 @@ parSim(
     y <- rBS13(n=n, mu, sigma)
     
     f   <- y ~ 1
-    mod <- try(suppressMessages(gamlss2(f, family=BS13)), silent = TRUE)
+    mod <- try(suppressMessages(
+      gamlss2(f, family = BS13, 
+              control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150),
+              optimizer = RS_CG) 
+    ), silent = TRUE)
     
     if (class(mod)[1] == "try-error") {
       mu_hat    <- NA
@@ -62,9 +66,9 @@ lista_datos <- lapply(archivos, read.table, header = TRUE,
 datos <- do.call(rbind, lista_datos)
 
 datos$case <- with(datos, 
-                   ifelse(mu==3 & sigma==10, 1, 
-                          ifelse(mu==3 & sigma==25, 2,
-                                ifelse(mu==10 & sigma==10, 3, 4))))
+                   ifelse(mu==1.5 & sigma==1.5, 1, 
+                          ifelse(mu==1.5 & sigma==2, 2,
+                                ifelse(mu==2.5 & sigma==1.5, 3, 4))))
 datos$case <- as.factor(datos$case)
 
 # To analize the results --------------------------------------------------
@@ -98,13 +102,13 @@ if (!dir.exists("C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs"))
 
 p1 <- ggplot(dat, aes(x=n, y=bias_mu, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("Bias for ", mu))) +
-  ylim(min(dat$bias_mu), 0.005)
+  ylab(expression(paste("Bias for ", mu)))
+p1
 
 p2 <- ggplot(dat, aes(x=n, y=bias_si, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("Bias for ", sigma)))+
-  ylim(min(dat$bias_mu), 0.1)
+  ylab(expression(paste("Bias for ", sigma)))
+p2
 
 p1_final <- p1 + theme_bw(base_size = 13)
 p2_final <- p2 + theme_bw(base_size = 13)
@@ -117,10 +121,12 @@ ggsave(filename="C:/Users/davil/Desktop/BS-Parametrizations/Simulaciones/Figs/bi
 p3 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", mu)))
+p3
 
 p4 <- ggplot(dat, aes(x=n, y=mse_si, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", sigma)))
+p4
 
 p3_final <- p3 + theme_bw(base_size = 13)
 p4_final <- p4 + theme_bw(base_size = 13)
