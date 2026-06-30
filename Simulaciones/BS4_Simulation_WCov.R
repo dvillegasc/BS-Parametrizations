@@ -28,7 +28,7 @@ parSim(
     f   <- y ~ 1
     mod <- try(suppressMessages(
       gamlss2(f, family = BS4, 
-              control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 150),
+              control = gamlss2_control(trace = FALSE, eps = 1e-05, maxit = 300),
               optimizer = RS_CG)
     ), silent = TRUE)
     
